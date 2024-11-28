@@ -4,7 +4,8 @@ from pathlib import Path
 import pandas as pd
 from scipy.special import binom
 from datetime import datetime
-#this script computes the mean and variance of random energy model using Jackknife method
+#this script computes the mean and variance of random energy model
+#this script actually does not use jackknife
 
 
 
@@ -74,16 +75,16 @@ def jackknife_mean_variance(samples):
     N = len(samples)
 
     # Compute leave-one-out means
-    leave_one_out_means = np.zeros(N)
-    for i in range(N):
-        leave_one_out_means[i] = np.mean(np.delete(samples, i))
+    # leave_one_out_means = np.zeros(N)
+    # for i in range(N):
+    #     leave_one_out_means[i] = np.mean(np.delete(samples, i))
 
     # Compute jackknife mean
-    jackknife_mean = np.mean(leave_one_out_means)
+    jackknife_mean = np.mean(samples)
 
     # Compute jackknife variance
-    jackknife_variance = (N - 1) / N * np.sum((leave_one_out_means - jackknife_mean) ** 2)
-
+    # jackknife_variance = (N - 1) / N * np.sum((leave_one_out_means - jackknife_mean) ** 2)
+    jackknife_variance=np.var(samples)
     return jackknife_mean, jackknife_variance
 
 
