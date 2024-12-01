@@ -99,6 +99,7 @@ spin_configurations_samples = np.random.choice([0, 1], size=(N_samples, L))
 
 B = list(combinations(range(L), 2))
 C = list(combinations(B, K))
+print(f"len(C)={len(C)}")
 # Generate training and testing datasets
 X_train, Y_train, X_test, Y_test = generate_data(A,T,spin_configurations_samples,C,0.8)
 
