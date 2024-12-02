@@ -86,10 +86,10 @@ class DSNN(nn.Module):
 
 
 # System Parameters
-L = 14  # Number of spins
+L = 20  # Number of spins
 r = 2   # Number of spins in each interaction term
 
-data_inDir=f"./data_inf_range_model_r2_L{L}_r{r}/"
+data_inDir=f"./data_inf_range_model_L{L}_r{r}/"
 fileNameTrain=data_inDir+"/inf_range.train.pkl"
 
 # Load data from pickle
@@ -131,7 +131,7 @@ dataset = CustomDataset(X_train, Y_train)
 dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
 num_layers = 3  # Number of DSNN layers
-num_neurons = int(num_spins*1.5)  # Number of neurons per layer
+num_neurons = int(num_spins*0.9)  # Number of neurons per layer
 model = DSNN(num_spins=num_spins, num_layers=num_layers, num_neurons=num_neurons).double().to(device)
 
 
@@ -142,10 +142,11 @@ optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=
 
 # Define a step learning rate scheduler
 # Reduce learning rate by a factor of gamma every step_size epochs
-scheduler = StepLR(optimizer, step_size=200, gamma=0.5)
+decrease_over=200
+scheduler = StepLR(optimizer, step_size=decrease_over, gamma=0.5)
 
 
-out_model_Dir=f"./out_model_r2_L{L}_r{r}_layer{num_layers}/"
+out_model_Dir=f"./out_model_L{L}_r{r}_layer{num_layers}/"
 Path(out_model_Dir).mkdir(exist_ok=True,parents=True)
 loss_file_content=[]
 

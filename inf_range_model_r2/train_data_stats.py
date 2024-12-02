@@ -4,10 +4,10 @@ from scipy.special import binom
 import matplotlib.pyplot as plt
 
 # System Parameters
-L = 14  # Number of spins
+L = 20  # Number of spins
 r = 2   # Number of spins in each interaction term
 
-data_inDir=f"./data_inf_range_model_r2_L{L}_r{r}/"
+data_inDir=f"./data_inf_range_model_L{L}_r{r}/"
 fileNameTrain=data_inDir+"/inf_range.train.pkl"
 
 with open(fileNameTrain,"rb") as fptr:

@@ -39,12 +39,12 @@ def all_r2_comb_2_E(spin_config,all_r2_comb,J_vec):
 
 A=1
 # System Parameters
-L = 14  # Number of spins
+L = 20  # Number of spins
 r = 2   # Number of spins in each interaction term
 
 seed=17
 np.random.seed(seed)
-N_samples=5000
+N_samples=50000
 B = list(combinations(range(L), r))
 K=len(B)
 # Generate random spin configurations
@@ -62,15 +62,15 @@ def generate_data(spin_configurations_samples,all_r2_comb,J_vec,train_ratio=0.8)
     """
     # Compute energies for all configurations
     energies = []
-    counter = 0
-    tGenStart = datetime.now()
+    # counter = 0
+    # tGenStart = datetime.now()
     for spin_config in spin_configurations_samples:
         energies.append(all_r2_comb_2_E(spin_config,all_r2_comb,J_vec))
-        if counter%100==0:
-            print("processed :"+str(counter))
-            tGenEnd=datetime.now()
-            print("time: ",tGenEnd-tGenStart)
-        counter+=1
+        # if counter%100==0:
+        #     # print("processed :"+str(counter))
+        #     tGenEnd=datetime.now()
+        #     # print("time: ",tGenEnd-tGenStart)
+        # counter+=1
 
     # Split into training and testing datasets
     split_index = int(train_ratio * N_samples)
@@ -85,7 +85,7 @@ tStart=datetime.now()
 X_train, Y_train, X_test, Y_test=generate_data(spin_configurations_samples,B,J_vec,0.8)
 
 
-outDir=f"./data_inf_range_model_r2_L{L}_r{r}/"
+outDir=f"./data_inf_range_model_L{L}_r{r}/"
 Path(outDir).mkdir(exist_ok=True,parents=True)
 #save training data
 fileNameTrain=outDir+"/inf_range.train.pkl"
