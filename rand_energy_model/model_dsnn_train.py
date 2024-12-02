@@ -34,19 +34,23 @@ class DSNN(nn.Module):
 
         # Effective field layers (F_i)
         self.effective_field_layers = nn.ModuleList(
-            [nn.Linear(num_spins,num_spins) for i in range(num_layers)]
+            [nn.Sequential(
+            nn.Linear(num_spins if i==1 else num_neurons , num_neurons),  # Optional intermediate transformation
+            nn.Tanh(),
+            nn.Linear(num_neurons, num_neurons)
+        ) for i in range(1,num_layers+1)]
         )
 
         # Quasi-particle layers (S_i)
         self.quasi_particle_layers = nn.ModuleList(
-            [nn.Linear(num_spins,num_spins) for i in range(num_layers)]
+            [nn.Linear(num_spins,num_neurons) for i in range(1,num_layers+1)]
         )
 
         # Output layer
         self.output_layer = nn.Sequential(
-            nn.Linear(num_spins, num_spins),  # Optional intermediate transformation
+            nn.Linear(num_neurons, num_neurons),  # Optional intermediate transformation
             nn.Tanh(),
-            nn.Linear(num_spins, 1)  # Final mapping to scalar
+            nn.Linear(num_neurons, 1)  # Final mapping to scalar
         )
 
     def forward(self, S0):
@@ -64,12 +68,12 @@ class DSNN(nn.Module):
         # Initialize S as the input spin configuration
         S = S0
 
-        for i in range(self.num_layers):
+        for i in range(1,self.num_layers+1):
             # Compute effective field layer Fi
-            Fi = torch.tanh(self.effective_field_layers[i](S))
+            Fi = self.effective_field_layers[i-1](S)
 
             # Compute quasi-particle layer Si
-            Si = torch.tanh(self.quasi_particle_layers[i](S0)) * Fi
+            Si = torch.tanh(self.quasi_particle_layers[i-1](S0)) * Fi
 
             # Update S for the next layer
             S = Si
@@ -78,6 +82,7 @@ class DSNN(nn.Module):
         E = self.output_layer(S).sum(dim=1, keepdim=True)  # Ensure scalar output per sample
 
         return E
+
 
 
 T=1.5
