@@ -61,7 +61,7 @@ def U_and_Z(A,T,spin_config,all_K_combinations):
 
 
 
-def generate_data(A,T,spin_configurations_samples,all_K_combinations, train_ratio=0.8):
+def  generate_data(A,T,spin_configurations_samples,all_K_combinations, train_ratio=0.8):
     """
 
     :param A:
@@ -72,9 +72,19 @@ def generate_data(A,T,spin_configurations_samples,all_K_combinations, train_rati
     :return:
     """
     # Compute energies for all configurations
-    energies = np.array([
-        U_and_Z(A,T,spin_config,all_K_combinations) for spin_config in spin_configurations_samples
-    ])
+    # energies = np.array([
+    #     U_and_Z(A,T,spin_config,all_K_combinations) for spin_config in spin_configurations_samples
+    # ])
+    energies=[]
+    counter=0
+    tGenStart=datetime.now()
+    for spin_config in spin_configurations_samples:
+        energies.append(U_and_Z(A,T,spin_config,all_K_combinations))
+        if counter%100==0:
+            print("processed :"+str(counter))
+            tGenEnd=datetime.now()
+            print("time: ",tGenEnd-tGenStart)
+        counter+=1
     # Split into training and testing datasets
     split_index = int(train_ratio * N_samples)
     X_train, Y_train = spin_configurations_samples[:split_index], energies[:split_index]
@@ -89,7 +99,7 @@ A=1
 T=1.5
 
 # System Parameters
-L = 10  # Number of spins
+L = 14  # Number of spins
 r = 2   # Number of spins in each interaction term
 K = 3  # Number of interaction terms
 N_samples=5000
@@ -118,3 +128,6 @@ with open(fileNameTest, "wb") as f:
 
 tEnd=datetime.now()
 print("time: ",tEnd-tStart)
+
+
+
