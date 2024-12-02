@@ -98,12 +98,12 @@ batch_size = 64
 learning_rate = 0.001
 weight_decay = 0.01  # L2 regularization strength
 num_epochs = int(num_sample/batch_size*2)
-
-X_train = torch.tensor(X_train, dtype=torch.float32)  # Input features
-
-Y_train = torch.tensor(Y_train, dtype=torch.float32).view(-1, 1)  # Labels reshaped to (num_samples, 1)
-
-
+# Define device
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print("device="+str(device))
+# Load data
+X_train = torch.tensor(X_train, dtype=torch.float64).to(device)  # Move to device
+Y_train = torch.tensor(Y_train, dtype=torch.float64).view(-1, 1).to(device)
 # Define a custom dataset
 class CustomDataset(Dataset):
     def __init__(self, X, Y):
@@ -121,40 +121,51 @@ dataset = CustomDataset(X_train, Y_train)
 dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
 num_layers = 4  # Number of DSNN layers
-num_neurons = 45  # Number of neurons per layer
+num_neurons = num_spins  # Number of neurons per layer
 
-model = DSNN(num_spins=num_spins, num_layers=num_layers, num_neurons=num_neurons)
-
+model = DSNN(num_spins=num_spins, num_layers=num_layers, num_neurons=num_neurons).double().to(device)
 # Define loss function and optimizer with L2 regularization
-criterion = nn.MSELoss()  # Mean Squared Error for regression
+# Optimizer and loss
+criterion = nn.MSELoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
-tTrainStart=datetime.now()
+
 # Training loop
+tTrainStart = datetime.now()
 for epoch in range(num_epochs):
     model.train()
     epoch_loss = 0
 
     for X_batch, Y_batch in dataloader:
+        X_batch, Y_batch = X_batch.to(device), Y_batch.to(device)  # Move batch to device
+
         # Forward pass
         predictions = model(X_batch)
 
         # Compute loss
-
         loss = criterion(predictions, Y_batch)
-        # Backward pass and optimization
+
+        # Backward pass
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
 
         # Accumulate batch loss
-        epoch_loss += loss.item()
+        # print(f"loss.item()={loss.item()}")
+        # print(f"X_batch.size(0)={X_batch.size(0)}")
+        epoch_loss += loss.item() * X_batch.size(0)
+        # print(f"loss.item() * X_batch.size(0)={loss.item() * X_batch.size(0)}")
 
-    # Print epoch summary
-    print(f"Epoch [{epoch + 1}/{num_epochs}], Loss: {epoch_loss / len(dataloader):.4f}")
+    # Average loss over total samples
+    # print(f"len(dataset)={len(dataset)}")
+    average_loss = epoch_loss / len(dataset)
 
+    # Print and log epoch summary
+    print(f"Epoch [{epoch + 1}/{num_epochs}], Loss: {average_loss:.4f}")
+    with open(inDir + "/training_log.txt", "a") as log_file:
+        log_file.write(f"Epoch [{epoch + 1}/{num_epochs}], Loss: {average_loss:.4f}\n")
 
+# Save the model
+torch.save(model.state_dict(), inDir + "/model.pth")
+tTrainEnd = datetime.now()
 
-torch.save(model.state_dict(), inDir+"/model.pth")
-tTrainEnd=datetime.now()
-
-print("time: ",tTrainEnd-tTrainStart)
+print("Training time:", tTrainEnd - tTrainStart)
