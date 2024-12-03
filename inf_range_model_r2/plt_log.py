@@ -1,14 +1,16 @@
 import numpy as np
 import re
 import matplotlib.pyplot as plt
-# from model_dsnn_train import L,r,num_layers,decrease_over
+from model_dsnn_config import  num_neurons,decrease_rate,batch_size,learning_rate,weight_decay
+from model_dsnn_config import L,r,num_layers,decrease_over
 # System Parameters
-L = 14  # Number of spins
-r = 2   # Number of spins in each interaction term
-num_layers = 4  # Number of DSNN layers
+# L = 15  # Number of spins
+# r = 2   # Number of spins in each interaction term
+# num_layers = 8  # Number of DSNN layers
 in_model_Dir=f"./out_model_L{L}_r{r}_layer{num_layers}/"
-decrease_over=150
-log_fileName=in_model_Dir + "/training_log.txt"
+# decrease_over=150
+name="DNN"
+log_fileName=in_model_Dir + f"/{name}_training_log.txt"
 
 # Open the file and read each line
 with open(log_fileName, 'r') as file:
@@ -34,16 +36,18 @@ for one_line in lines:
 print(f"len(loss_vec)={len(loss_vec)}")
 # Plotting the loss values
 plt.figure(figsize=(10, 6))
-plt.plot(loss_vec, label="Loss", linewidth=2)
+epoch_vec=list(range(0,len(loss_vec)))
+truncate_at=0
+plt.plot(epoch_vec[truncate_at:],loss_vec[truncate_at:], label="Loss", linewidth=2)
 plt.xlabel("Epoch", fontsize=12)
 plt.ylabel("Loss", fontsize=12)
 plt.xscale("log")
 plt.yscale("log")
-plt.title("Training Loss Over Epochs", fontsize=14)
+plt.title(f"{name}: Training Loss Over Epochs", fontsize=14)
 # plt.grid(True)
 plt.legend(fontsize=12)
 # Add vertical dotted lines every step_size steps
 for step in range(0, len(loss_vec), decrease_over):
     plt.axvline(x=step, color='pink', linestyle='dotted', linewidth=1.2)
 plt.tight_layout()
-plt.savefig(in_model_Dir+"/loss.png")
+plt.savefig(in_model_Dir+f"/{name}_loss.png")

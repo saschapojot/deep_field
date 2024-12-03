@@ -4,7 +4,7 @@ from scipy.special import binom
 import matplotlib.pyplot as plt
 
 # System Parameters
-L = 20  # Number of spins
+L = 15  # Number of spins
 r = 2   # Number of spins in each interaction term
 
 data_inDir=f"./data_inf_range_model_L{L}_r{r}/"

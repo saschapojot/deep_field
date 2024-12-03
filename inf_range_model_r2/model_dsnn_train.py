@@ -9,8 +9,8 @@ from torch.optim.lr_scheduler import StepLR
 from torch.utils.data import Dataset, DataLoader
 from pathlib import Path
 from model_dsnn_config import format_using_decimal,DSNN,CustomDataset,L,r,decrease_over,num_layers
-
-
+from model_dsnn_config import  num_neurons,decrease_rate,batch_size,learning_rate,weight_decay
+from model_dsnn_config import  epoch_multiple,device
 # def format_using_decimal(value, precision=10):
 #     # Set the precision higher to ensure correct conversion
 #     getcontext().prec = precision + 2
@@ -103,14 +103,14 @@ with open(fileNameTrain, 'rb') as f:
 num_sample,num_spins=X_train.shape
 
 # Hyperparameters
-batch_size = 64
-learning_rate = 0.001
-weight_decay = 0.01  # L2 regularization strength
-num_epochs = int(num_sample/batch_size*3)
+# batch_size = 64
+# learning_rate = 0.001
+# weight_decay = 0.01  # L2 regularization strength
+num_epochs = int(num_sample/batch_size*epoch_multiple)
 
 # Define device
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-print("device="+str(device))
+# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# print("device="+str(device))
 
 # Load data
 X_train = torch.tensor(X_train, dtype=torch.float64).to(device)  # Move to device
@@ -134,7 +134,7 @@ dataset = CustomDataset(X_train, Y_train)
 dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
 # num_layers = 5  # Number of DSNN layers
-num_neurons = int(num_spins*2)  # Number of neurons per layer
+# num_neurons = int(num_spins*3)  # Number of neurons per layer
 model = DSNN(num_spins=num_spins, num_layers=num_layers, num_neurons=num_neurons).double().to(device)
 
 
@@ -146,7 +146,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=
 # Define a step learning rate scheduler
 # Reduce learning rate by a factor of gamma every step_size epochs
 # decrease_over=70
-scheduler = StepLR(optimizer, step_size=decrease_over, gamma=0.7)
+scheduler = StepLR(optimizer, step_size=decrease_over, gamma=decrease_rate)
 
 
 out_model_Dir=f"./out_model_L{L}_r{r}_layer{num_layers}/"
@@ -193,11 +193,11 @@ for epoch in range(num_epochs):
     print(f"Learning Rate after Epoch {epoch + 1}: {current_lr:.8e}")
 
 # Save the loss log
-with open(out_model_Dir + "/training_log.txt", "w+") as fptr:
+with open(out_model_Dir + "/DSNN_training_log.txt", "w+") as fptr:
     fptr.writelines(loss_file_content)
 
 # Save the model
-torch.save(model.state_dict(), out_model_Dir + "/model.pth")
+torch.save(model.state_dict(), out_model_Dir + "/DSNN_model.pth")
 tTrainEnd = datetime.now()
 
 print("Training time:", tTrainEnd - tTrainStart)

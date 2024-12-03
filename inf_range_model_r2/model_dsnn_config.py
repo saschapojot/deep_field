@@ -38,7 +38,7 @@ class DSNN(nn.Module):
         # Effective field layers (F_i)
         self.effective_field_layers = nn.ModuleList(
             [nn.Sequential(
-            nn.Linear(num_spins if i==1 else num_neurons , num_neurons),  # Optional intermediate transformation
+            nn.Linear(num_spins if i==1 else num_neurons , num_neurons),
             nn.Tanh(),
             nn.Linear(num_neurons, num_neurons)
         ) for i in range(1,num_layers+1)]
@@ -46,7 +46,11 @@ class DSNN(nn.Module):
 
         # Quasi-particle layers (S_i)
         self.quasi_particle_layers = nn.ModuleList(
-            [nn.Linear(num_spins,num_neurons) for i in range(1,num_layers+1)]
+            [nn.Sequential(
+            nn.Linear(num_spins  , num_neurons),
+            nn.Tanh(),
+            nn.Linear(num_neurons, num_neurons)
+        ) for i in range(1,num_layers+1)]
         )
 
         # Output layer
@@ -76,7 +80,7 @@ class DSNN(nn.Module):
             Fi = self.effective_field_layers[i-1](S)
 
             # Compute quasi-particle layer Si
-            Si = torch.tanh(self.quasi_particle_layers[i-1](S0)) * Fi
+            Si = self.quasi_particle_layers[i-1](S0) * Fi
 
             # Update S for the next layer
             S = Si
@@ -102,5 +106,16 @@ class CustomDataset(Dataset):
 L = 15  # Number of spins
 r = 2   # Number of spins in each interaction term
 # Reduce learning rate by a factor of gamma every step_size epochs
-decrease_over=70
-num_layers = 8  # Number of DSNN layers
+decrease_over=100
+decrease_rate=1
+num_layers = 3  # Number of DSNN layers
+num_neurons = int(L*2)  # Number of neurons per layer
+batch_size = 64
+learning_rate = 0.001
+weight_decay = 0.01  # L2 regularization strength
+
+epoch_multiple=15
+
+# Define device
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print("device="+str(device))

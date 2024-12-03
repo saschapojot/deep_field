@@ -39,12 +39,12 @@ def all_r2_comb_2_E(spin_config,all_r2_comb,J_vec):
 
 A=1
 # System Parameters
-L = 20  # Number of spins
+L = 15  # Number of spins
 r = 2   # Number of spins in each interaction term
 
 seed=17
 np.random.seed(seed)
-N_samples=50000
+N_samples=15000
 B = list(combinations(range(L), r))
 K=len(B)
 # Generate random spin configurations
