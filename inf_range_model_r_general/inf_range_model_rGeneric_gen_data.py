@@ -64,15 +64,15 @@ def generate_data(spin_configurations_samples,all_r_comb,J_vec,train_ratio):
     """
     # Compute energies for all configurations
     energies = []
-    # counter = 0
-    # tGenStart = datetime.now()
+    counter = 0
+    tGenStart = datetime.now()
     for spin_config in spin_configurations_samples:
         energies.append(all_rGeneric_comb_2_E(spin_config,all_r_comb,J_vec))
-        # if counter%100==0:
-        #     # print("processed :"+str(counter))
-        #     tGenEnd=datetime.now()
-        #     # print("time: ",tGenEnd-tGenStart)
-        # counter+=1
+        if counter%10000==0:
+            print("processed :"+str(counter))
+            tGenEnd=datetime.now()
+            print("time: ",tGenEnd-tGenStart)
+        counter+=1
 
     # Split into training and testing datasets
     split_index = int(train_ratio * N_samples)
