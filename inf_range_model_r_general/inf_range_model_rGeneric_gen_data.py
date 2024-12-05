@@ -21,11 +21,11 @@ def format_using_decimal(value, precision=10):
     return str(formatted_value)
 
 
-def all_rGeneric_comb_2_E(spin_config,all_r_comb,J_vec):
+def all_rGeneric_comb_2_E(spin_config,selected_r_comb,J_vec):
     """
 
     :param spin_config: spin values on L sites
-    :param all_r_comb: all r-element combinations from {0,1,...,L-1}
+    :param selected_r_comb: selected r-element combinations from {0,1,...,L-1}
     :param J_vec: coupling coefficients for each combination
     :return: energy
     """
@@ -33,7 +33,7 @@ def all_rGeneric_comb_2_E(spin_config,all_r_comb,J_vec):
     for m in range(0,len(J_vec)):
 
         J_tmp=J_vec[m]
-        v_tmp=all_r_comb[m]
+        v_tmp=selected_r_comb[m]
         spin_vec_tmp=[spin_config[v_tmp_component] for v_tmp_component in v_tmp]
         E_val+=-J_tmp*np.prod(spin_vec_tmp)
     return E_val
@@ -45,20 +45,29 @@ r = 5 # Number of spins in each interaction term
 
 seed=17
 np.random.seed(seed)
-N_samples=int(1e7)
+N_samples=int(2*1e6)
 B = list(combinations(range(L), r))
-K=len(B)
+# print(len(B))
+# print(B[0])
+# print(B[134])
+K=40
 print(f"K={K}")
+
+unique_integers = np.random.choice(range(0, len(B)), size=K, replace=False)
+print(unique_integers)
+# print(unique_integers)
 # Generate random spin configurations
 spin_configurations_samples = np.random.choice([-1, 1], size=(N_samples, L))
 J_vec=[np.random.normal(0,A) for _ in range(0,K)]
 split_ratio=0.5
 
-def generate_data(spin_configurations_samples,all_r_comb,J_vec,train_ratio):
+B_selected=[B[ind] for ind in unique_integers]
+# print(B_selected)
+def generate_data(spin_configurations_samples,selected_r_comb,J_vec,train_ratio):
     """
 
     :param spin_configurations_samples:
-    :param all_r_comb:
+    :param selected_r_comb:
     :param J_vec:
     :return:
     """
@@ -67,8 +76,8 @@ def generate_data(spin_configurations_samples,all_r_comb,J_vec,train_ratio):
     counter = 0
     tGenStart = datetime.now()
     for spin_config in spin_configurations_samples:
-        energies.append(all_rGeneric_comb_2_E(spin_config,all_r_comb,J_vec))
-        if counter%10000==0:
+        energies.append(all_rGeneric_comb_2_E(spin_config,selected_r_comb,J_vec))
+        if counter%50000==0:
             print("processed :"+str(counter))
             tGenEnd=datetime.now()
             print("time: ",tGenEnd-tGenStart)
@@ -84,10 +93,10 @@ def generate_data(spin_configurations_samples,all_r_comb,J_vec,train_ratio):
 
 
 tStart=datetime.now()
-X_train, Y_train, X_test, Y_test=generate_data(spin_configurations_samples,B,J_vec,split_ratio)
+X_train, Y_train, X_test, Y_test=generate_data(spin_configurations_samples,B_selected,J_vec,split_ratio)
 
 
-outDir=f"./data_inf_range_model_L{L}_r{r}/"
+outDir=f"./data_inf_range_model_L{L}_K_{K}_r{r}/"
 Path(outDir).mkdir(exist_ok=True,parents=True)
 #save training data
 fileNameTrain=outDir+"/inf_range.train.pkl"
