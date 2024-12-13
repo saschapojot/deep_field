@@ -20,3 +20,6 @@ J=16*t
 mu=-8.3*t
 T=0.1*t
 
+C=10
+
+filter_size=5

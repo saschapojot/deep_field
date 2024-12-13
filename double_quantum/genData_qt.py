@@ -46,7 +46,7 @@ def generate_Sigmax_Sigmay_Sigmaz(N,seed=None):
 
     Sigma_z=cos_Theta_mat
 
-    Sigma_combined = np.stack((Sigma_x, Sigma_y, Sigma_z), axis=-1)
+    Sigma_combined = np.stack([Sigma_x, Sigma_y, Sigma_z])
 
     return Sigma_combined
 
@@ -106,12 +106,12 @@ def gen_Gamma_mat(T0_mat,T1_mat,T2_mat,T3_mat,Sigma_combined,t,J,mu,I):
     :param I:
     :return: Gamma(S)
     """
+    # print(f"Sigma_combined.shape={Sigma_combined.shape}")
+    Sigma_x=Sigma_combined[0,:,:]#N by N matrix
 
-    Sigma_x=Sigma_combined[:,:,0]#N by N matrix
+    Sigma_y=Sigma_combined[1,:,:]# N by N matrix
 
-    Sigma_y=Sigma_combined[:,:,1]# N by N matrix
-
-    Sigma_z=Sigma_combined[:,:,2]# N by N matrix
+    Sigma_z=Sigma_combined[2,:,:]# N by N matrix
 
     Sx_vec=Sigma_x.flatten()# length N**2 vector
 
@@ -239,7 +239,7 @@ train_ratio=0.8
 X_train, Y_train, X_test, Y_test=generate_train_test(data,values,train_ratio)
 
 
-outDir=f"./train_test_data/N{N}/"
+outDir=f"./train_test_data/N{N}/C{C}/"
 Path(outDir).mkdir(exist_ok=True,parents=True)
 
 out_fileName_train=outDir+"/db.train.pkl"
