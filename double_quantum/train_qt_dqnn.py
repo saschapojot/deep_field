@@ -67,35 +67,6 @@ def apply_orthogonal_matrix(X_train_tensor, U):
     return transformed
 
 
-class CustomDataset(Dataset):
-    def __init__(self, X, Y):
-        """
-        Custom dataset for supervised learning with `dsnn_qt`.
-
-        Args:
-            X (torch.Tensor): Input tensor of shape (num_samples, 3, N, N).
-            Y (torch.Tensor): Target tensor of shape (num_samples,).
-        """
-        self.X = X
-        self.Y = Y
-
-    def __len__(self):
-        """
-        Returns the number of samples in the dataset.
-        """
-        return len(self.Y)
-
-    def __getitem__(self, idx):
-        """
-        Retrieves the input and target at the specified index.
-
-        Args:
-            idx (int): Index of the sample to retrieve.
-
-        Returns:
-            tuple: (input, target) where input is of shape (3, N, N) and target is a scalar.
-        """
-        return self.X[idx], self.Y[idx]
 
 
 # Instantiate the network
@@ -137,7 +108,7 @@ train_dataset = CustomDataset(X_train_tensor, Y_train_tensor)
 batch_size = 100  # Define batch size
 train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
 
-step_num_after_S1=3
+# step_num_after_S1=3
 num_epochs = 100
 learning_rate = 1e-3
 weight_decay = 1e-5

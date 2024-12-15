@@ -208,7 +208,7 @@ tStart=datetime.now()
 
 
 I_N2=np.eye(N**2)
-num_samples=10
+num_samples=10000
 seed_vec=range(100,100+num_samples)
 data,values=gen_dataset(num_samples,N,T0_mat,T1_mat,T2_mat,T3_mat,t,J,mu,I_N2,T,seed_vec)
 
