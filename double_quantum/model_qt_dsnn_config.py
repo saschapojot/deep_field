@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-
+from decimal import Decimal, getcontext
 import pickle
 from decimal import Decimal, getcontext
 import numpy as np
@@ -25,9 +25,19 @@ C=20
 
 filter_size=5
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-decrease_over = 70
+decrease_over = 50
+
+decrease_rate = 0.7
 
 
+def format_using_decimal(value, precision=10):
+    # Set the precision higher to ensure correct conversion
+    getcontext().prec = precision + 2
+    # Convert the float to a Decimal with exact precision
+    decimal_value = Decimal(str(value))
+    # Normalize to remove trailing zeros
+    formatted_value = decimal_value.quantize(Decimal(1)) if decimal_value == decimal_value.to_integral() else decimal_value.normalize()
+    return str(formatted_value)
 
 class Phi0Layer(nn.Module):
     def __init__(self, out_channels, kernel_size, padding=2):

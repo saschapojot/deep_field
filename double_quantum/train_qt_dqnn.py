@@ -105,15 +105,15 @@ Y_train_tensor = torch.tensor(Y_train_array, dtype=torch.float)  # Shape: (num_s
 train_dataset = CustomDataset(X_train_tensor, Y_train_tensor)
 
 # Create DataLoader for training
-batch_size = 1000  # Define batch size
+batch_size = 1000 # Define batch size
 train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
 
 # step_num_after_S1=3
-num_epochs = 1000
+num_epochs = 500
 learning_rate = 1e-3
 weight_decay = 1e-5
 # decrease_over = 50
-decrease_rate = 0.6
+# decrease_rate = 0.6
 
 
 # Optimizer, scheduler, and loss function
@@ -167,12 +167,16 @@ for epoch in range(num_epochs):
 
 out_model_dir=f"./out_model_data/N{N}/C{C}/layer{step_num_after_S1}/"
 Path(out_model_dir).mkdir(exist_ok=True,parents=True)
+decrease_overStr=format_using_decimal(decrease_over)
+decrease_rateStr=format_using_decimal(decrease_rate)
+
+suffix_str=f"_over{decrease_overStr}_rate{decrease_rateStr}"
 # Save training log to file
-with open(out_model_dir+"/training_log.txt", "w") as f:
+with open(out_model_dir+f"/training_log{suffix_str}.txt", "w") as f:
     f.writelines(loss_file_content)
 
 # Save the trained model
-torch.save(model.state_dict(), out_model_dir+"/dsnn_qt_trained.pth")
+torch.save(model.state_dict(), out_model_dir+f"/dsnn_qt_trained{suffix_str}.pth")
 print("Training complete. Model saved as 'dsnn_qt_trained.pth'.")
 
 tEnd=datetime.now()
