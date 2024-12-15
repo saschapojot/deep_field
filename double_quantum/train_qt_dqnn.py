@@ -75,7 +75,7 @@ def apply_orthogonal_matrix(X_train_tensor, U):
 argErrCode=3
 if (len(sys.argv)!=7):
     print("wrong number of arguments")
-    print("example: python launch_one_run.py num_epochs decrease_over decrease_rate step_num_after_S1 C N")
+    print("example: python train_qt_dqnn.py num_epochs decrease_over decrease_rate step_num_after_S1 C N")
     exit(argErrCode)
 num_epochs = int(sys.argv[1])
 learning_rate = 1e-3
