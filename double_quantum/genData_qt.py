@@ -1,5 +1,5 @@
 import numpy as np
-
+import sys
 from model_qt_dsnn_config import *
 
 #This script generates data for double exchange quantum model
@@ -51,8 +51,12 @@ def generate_Sigmax_Sigmay_Sigmaz(N,seed=None):
     return Sigma_combined
 
 
-
-N=5
+argErrCode=3
+if (len(sys.argv)!=2):
+    print("wrong number of arguments")
+    print("example: python launch_one_run.py num_epochs decrease_over decrease_rate step_num_after_S1 C N")
+    exit(argErrCode)
+N=int(sys.argv[1])
 #construct T0, T1 mat
 T0_mat=np.zeros((N**2,N**2),dtype=float)
 
