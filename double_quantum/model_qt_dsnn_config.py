@@ -13,7 +13,7 @@ import sys
 #this script defines the neural network, and gives parameters
 
 # step_num_after_S1=6
-N=5
+# N=7
 
 t=1
 

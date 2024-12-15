@@ -4,7 +4,7 @@ from scipy.special import binom
 import matplotlib.pyplot as plt
 
 
-N=10
+N=7
 
 
 inDir=f"./train_test_data/N{N}/"

@@ -52,7 +52,7 @@ def generate_Sigmax_Sigmay_Sigmaz(N,seed=None):
 
 
 
-
+N=5
 #construct T0, T1 mat
 T0_mat=np.zeros((N**2,N**2),dtype=float)
 

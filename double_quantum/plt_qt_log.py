@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 from model_qt_dsnn_config import *
 
 #this script plots training loss
-N=10
-C=20
+N=5
+C=10
 decrease_over = 50
 
 decrease_rate = 0.7

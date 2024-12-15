@@ -1,5 +1,5 @@
 from model_qt_dsnn_config import *
-
+import sys
 
 
 
@@ -69,18 +69,26 @@ def apply_orthogonal_matrix(X_train_tensor, U):
 
 
 
-# Instantiate the network
-model = dsnn_qt(
-    input_channels=3,
-    phi0_out_channels=C,
-    T_out_channels=C,
-    nonlinear_conv1_out_channels=C,
-    nonlinear_conv2_out_channels=C,
-    final_out_channels=1,
-    filter_size=filter_size
-).to(device)
 
 
+# step_num_after_S1=3
+argErrCode=3
+if (len(sys.argv)!=7):
+    print("wrong number of arguments")
+    print("example: python launch_one_run.py num_epochs decrease_over decrease_rate step_num_after_S1 C N")
+    exit(argErrCode)
+num_epochs = int(sys.argv[1])
+learning_rate = 1e-3
+weight_decay = 1e-5
+decrease_over = int(sys.argv[2])
+
+decrease_rate = float(sys.argv[3])
+
+step_num_after_S1=int(sys.argv[4])
+
+C=int(sys.argv[5])
+
+N=int(sys.argv[6])
 inDir=f"./train_test_data/N{N}/"
 
 in_pkl_train_file=inDir+"/db.train.pkl"
@@ -108,13 +116,17 @@ train_dataset = CustomDataset(X_train_tensor, Y_train_tensor)
 batch_size = 1000 # Define batch size
 train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
 
-# step_num_after_S1=3
-num_epochs = 500
-learning_rate = 1e-3
-weight_decay = 1e-5
-# decrease_over = 50
-# decrease_rate = 0.6
 
+# Instantiate the network
+model = dsnn_qt(
+    input_channels=3,
+    phi0_out_channels=C,
+    T_out_channels=C,
+    nonlinear_conv1_out_channels=C,
+    nonlinear_conv2_out_channels=C,
+    final_out_channels=1,
+    filter_size=filter_size
+).to(device)
 
 # Optimizer, scheduler, and loss function
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
@@ -170,14 +182,14 @@ Path(out_model_dir).mkdir(exist_ok=True,parents=True)
 decrease_overStr=format_using_decimal(decrease_over)
 decrease_rateStr=format_using_decimal(decrease_rate)
 
-suffix_str=f"_over{decrease_overStr}_rate{decrease_rateStr}"
+suffix_str=f"_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}"
 # Save training log to file
 with open(out_model_dir+f"/training_log{suffix_str}.txt", "w") as f:
     f.writelines(loss_file_content)
 
 # Save the trained model
 torch.save(model.state_dict(), out_model_dir+f"/dsnn_qt_trained{suffix_str}.pth")
-print("Training complete. Model saved as 'dsnn_qt_trained.pth'.")
+print("Training complete")
 
 tEnd=datetime.now()
 
