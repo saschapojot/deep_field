@@ -172,7 +172,7 @@ def vec_2_E(eig_vals,T):
 
 
 
-def gen_dataset(num_samples,N,T0_mat,T1_mat,T2_mat,T3_mat,t,J,mu,I_N2,T,seedVal=None):
+def gen_dataset(num_samples,N,T0_mat,T1_mat,T2_mat,T3_mat,t,J,mu,I_N2,T,seed_vec=None):
     """
 
     :param num_samples:
@@ -192,8 +192,8 @@ def gen_dataset(num_samples,N,T0_mat,T1_mat,T2_mat,T3_mat,t,J,mu,I_N2,T,seedVal=
     data = []
     values = []
 
-    for _ in range(0,num_samples):
-        Sigma_combined_tmp = generate_Sigmax_Sigmay_Sigmaz(N, seedVal)
+    for j in range(0,num_samples):
+        Sigma_combined_tmp = generate_Sigmax_Sigmay_Sigmaz(N, seed_vec[j])
         gm_tmp = gen_Gamma_mat(T0_mat, T1_mat, T2_mat, T3_mat, Sigma_combined_tmp, t, J, mu, I_N2)
 
         eigValsTmp,eigVecsTmp=np.linalg.eigh(gm_tmp)
@@ -206,10 +206,12 @@ def gen_dataset(num_samples,N,T0_mat,T1_mat,T2_mat,T3_mat,t,J,mu,I_N2,T,seedVal=
 
 tStart=datetime.now()
 
-seedVal=17
+
 I_N2=np.eye(N**2)
 num_samples=10
-data,values=gen_dataset(num_samples,N,T0_mat,T1_mat,T2_mat,T3_mat,t,J,mu,I_N2,T,seedVal)
+seed_vec=range(100,100+num_samples)
+data,values=gen_dataset(num_samples,N,T0_mat,T1_mat,T2_mat,T3_mat,t,J,mu,I_N2,T,seed_vec)
+
 
 def generate_train_test(data,values,train_ratio):
     """

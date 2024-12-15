@@ -23,3 +23,4 @@ T=0.1*t
 C=10
 
 filter_size=5
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

@@ -217,7 +217,7 @@ class NonlinearLayer(nn.Module):
         return x
 
 
-class RecursiveNeuralNetwork(nn.Module):
+class dsnn_qt(nn.Module):
     def __init__(self, input_channels,
                  phi0_out_channels=C, T_out_channels=C,
                  nonlinear_conv1_out_channels=C, nonlinear_conv2_out_channels=C,
@@ -235,7 +235,9 @@ class RecursiveNeuralNetwork(nn.Module):
             final_out_channels (int): Output channels for the final mapping (should be 1 for N x N matrix).
             filter_size (int): Size of the convolution filter in Phi0Layer and TLayer.
         """
-        super(RecursiveNeuralNetwork, self).__init__()
+        super(dsnn_qt, self).__init__()
+        # Phi0Layer
+        self.phi0_layer = Phi0Layer(out_channels=phi0_out_channels, kernel_size=filter_size)
         # TLayer
         self.T_layer = TLayer(out_channels=T_out_channels, kernel_size=filter_size)
 
@@ -320,7 +322,7 @@ class RecursiveNeuralNetwork(nn.Module):
 
         return E
 
-set_random_seed(18)
+# set_random_seed(18)
 
 # phi0_layer = Phi0Layer(out_channels=C, kernel_size=filter_size, padding=2)
 # T_layer=TLayer(out_channels=C,kernel_size=filter_size,padding=2)
@@ -361,17 +363,39 @@ def apply_orthogonal_matrix(X_train_tensor, U):
     return transformed
 
 
-# X_train_transformed = apply_orthogonal_matrix(X_train_tensor, U)
-#
-# Phi0_output_transformed=phi0_layer(X_train_transformed)
-# print(Phi0_output_transformed[3])
+class CustomDataset(Dataset):
+    def __init__(self, X, Y):
+        """
+        Custom dataset for supervised learning with `dsnn_qt`.
 
-# T_out_transformed=T_layer(X_train_transformed)
-# print(T_out_transformed[3])
+        Args:
+            X (torch.Tensor): Input tensor of shape (num_samples, 3, N, N).
+            Y (torch.Tensor): Target tensor of shape (num_samples,).
+        """
+        self.X = X
+        self.Y = Y
+
+    def __len__(self):
+        """
+        Returns the number of samples in the dataset.
+        """
+        return len(self.Y)
+
+    def __getitem__(self, idx):
+        """
+        Retrieves the input and target at the specified index.
+
+        Args:
+            idx (int): Index of the sample to retrieve.
+
+        Returns:
+            tuple: (input, target) where input is of shape (3, N, N) and target is a scalar.
+        """
+        return self.X[idx], self.Y[idx]
 
 
 # Instantiate the network
-model = RecursiveNeuralNetwork(
+model = dsnn_qt(
     input_channels=3,
     phi0_out_channels=C,
     T_out_channels=C,
@@ -379,7 +403,7 @@ model = RecursiveNeuralNetwork(
     nonlinear_conv2_out_channels=C,
     final_out_channels=1,
     filter_size=filter_size
-)
+).to(device)
 
 
 inDir=f"./train_test_data/N{N}/C{C}"
@@ -399,7 +423,79 @@ Y_train_array = np.array(Y_train)  # Shape: (num_samples,)
 X_train_tensor = torch.tensor(X_train_array, dtype=torch.float)  # Shape: (num_samples, 3, N, N)
 Y_train_tensor = torch.tensor(Y_train_array, dtype=torch.float)  # Shape: (num_samples,)
 
-batch_size=len(Y_train_array)
 
-# Initialize S1
-S1 = model.initialize_S1(X_train_tensor)
+
+
+# Instantiate the dataset
+train_dataset = CustomDataset(X_train_tensor, Y_train_tensor)
+
+# Create DataLoader for training
+batch_size = 100  # Define batch size
+train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
+
+step_num_after_S1=3
+num_epochs = 100
+learning_rate = 1e-3
+weight_decay = 1e-5
+decrease_over = 10
+decrease_rate = 0.9
+
+
+# Optimizer, scheduler, and loss function
+optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
+scheduler = StepLR(optimizer, step_size=decrease_over, gamma=decrease_rate)
+criterion = nn.MSELoss()
+
+# To log loss values for each epoch
+loss_file_content = []
+
+# Training loop
+for epoch in range(num_epochs):
+    model.train()  # Set model to training mode
+    epoch_loss = 0  # Reset epoch loss
+
+    for X_batch, Y_batch in train_loader:
+        X_batch, Y_batch = X_batch.to(device), Y_batch.to(device)  # Move batch to device
+
+        # Initialize S1 for the batch
+        S1 = model.initialize_S1(X_batch)
+
+        # Forward pass
+        predictions = model(X_batch, S1, steps=step_num_after_S1)
+
+        # Compute loss
+        loss = criterion(predictions, Y_batch)
+
+        # Backward pass
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+        # Accumulate batch loss (scaled by batch size)
+        epoch_loss += loss.item() * X_batch.size(0)
+
+    # Compute average loss over all samples
+    average_loss = epoch_loss / len(train_dataset)
+
+    # Log epoch summary
+    print(f"Epoch [{epoch + 1}/{num_epochs}], Loss: {average_loss:.4f}")
+    loss_file_content.append(f"Epoch [{epoch + 1}/{num_epochs}], Loss: {average_loss:.8f}\n")
+
+    # Update the learning rate
+    scheduler.step()
+
+    # Optionally log the current learning rate
+    current_lr = scheduler.get_last_lr()[0]
+    print(f"Learning Rate after Epoch {epoch + 1}: {current_lr:.8e}")
+
+
+out_model_dir=f"./out_model_data/N{N}/C{C}/layer{step_num_after_S1}/"
+Path(out_model_dir).mkdir(exist_ok=True,parents=True)
+# Save training log to file
+with open(out_model_dir+"/training_log.txt", "w") as f:
+    f.writelines(loss_file_content)
+
+# Save the trained model
+torch.save(model.state_dict(), out_model_dir+"/dsnn_qt_trained.pth")
+print("Training complete. Model saved as 'dsnn_qt_trained.pth'.")
+
