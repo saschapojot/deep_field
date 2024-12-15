@@ -12,8 +12,8 @@ import sys
 
 #this script defines the neural network, and gives parameters
 
-step_num_after_S1=3
-N=5
+step_num_after_S1=6
+N=10
 
 t=1
 
@@ -21,11 +21,11 @@ J=16*t
 mu=-8.3*t
 T=0.1*t
 
-C=10
+C=20
 
 filter_size=5
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
+decrease_over = 70
 
 
 
@@ -156,7 +156,7 @@ class TLayer(nn.Module):
 
 
 class NonlinearLayer(nn.Module):
-    def __init__(self, in_channels, conv1_out_channels, conv2_out_channels, kernel_size=3, padding=1):
+    def __init__(self, in_channels, conv1_out_channels, conv2_out_channels, kernel_size, padding=1):
         """
         Nonlinear Layer:
         1. A convolution using the input tensor.
@@ -352,16 +352,3 @@ class CustomDataset(Dataset):
             tuple: (input, target) where input is of shape (3, N, N) and target is a scalar.
         """
         return self.X[idx], self.Y[idx]
-#
-# N=5
-#
-# t=1
-#
-# J=16*t
-# mu=-8.3*t
-# T=0.1*t
-#
-# C=10
-#
-# filter_size=5
-# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

@@ -81,7 +81,7 @@ model = dsnn_qt(
 ).to(device)
 
 
-inDir=f"./train_test_data/N{N}/C{C}"
+inDir=f"./train_test_data/N{N}/"
 
 in_pkl_train_file=inDir+"/db.train.pkl"
 
@@ -105,15 +105,15 @@ Y_train_tensor = torch.tensor(Y_train_array, dtype=torch.float)  # Shape: (num_s
 train_dataset = CustomDataset(X_train_tensor, Y_train_tensor)
 
 # Create DataLoader for training
-batch_size = 100  # Define batch size
+batch_size = 1000  # Define batch size
 train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
 
 # step_num_after_S1=3
-num_epochs = 100
+num_epochs = 1000
 learning_rate = 1e-3
 weight_decay = 1e-5
-decrease_over = 10
-decrease_rate = 0.7
+# decrease_over = 50
+decrease_rate = 0.6
 
 
 # Optimizer, scheduler, and loss function
@@ -121,9 +121,10 @@ optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=
 scheduler = StepLR(optimizer, step_size=decrease_over, gamma=decrease_rate)
 criterion = nn.MSELoss()
 
+tStart=datetime.now()
 # To log loss values for each epoch
 loss_file_content = []
-
+print(f"device={device}")
 # Training loop
 for epoch in range(num_epochs):
     model.train()  # Set model to training mode
@@ -174,3 +175,6 @@ with open(out_model_dir+"/training_log.txt", "w") as f:
 torch.save(model.state_dict(), out_model_dir+"/dsnn_qt_trained.pth")
 print("Training complete. Model saved as 'dsnn_qt_trained.pth'.")
 
+tEnd=datetime.now()
+
+print(f"time: {tEnd-tStart}")

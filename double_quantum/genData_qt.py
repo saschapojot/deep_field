@@ -208,7 +208,7 @@ tStart=datetime.now()
 
 
 I_N2=np.eye(N**2)
-num_samples=10000
+num_samples=20000
 seed_vec=range(100,100+num_samples)
 data,values=gen_dataset(num_samples,N,T0_mat,T1_mat,T2_mat,T3_mat,t,J,mu,I_N2,T,seed_vec)
 
@@ -241,7 +241,7 @@ train_ratio=0.8
 X_train, Y_train, X_test, Y_test=generate_train_test(data,values,train_ratio)
 
 
-outDir=f"./train_test_data/N{N}/C{C}/"
+outDir=f"./train_test_data/N{N}/"
 Path(outDir).mkdir(exist_ok=True,parents=True)
 
 out_fileName_train=outDir+"/db.train.pkl"
