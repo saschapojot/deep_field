@@ -12,8 +12,10 @@ import sys
 
 #this script defines the neural network, and gives parameters
 
-step_num_after_S1=9
-N=10
+
+# step_num_after_S1=6
+N=5
+
 
 t=1
 
@@ -21,13 +23,15 @@ J=16*t
 mu=-8.3*t
 T=0.1*t
 
+
 C=30
+
 
 filter_size=5
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-decrease_over = 50
-
-decrease_rate = 0.7
+# decrease_over = 50
+#
+# decrease_rate = 0.7
 
 
 def format_using_decimal(value, precision=10):
@@ -228,8 +232,8 @@ class NonlinearLayer(nn.Module):
 
 class dsnn_qt(nn.Module):
     def __init__(self, input_channels,
-                 phi0_out_channels=C, T_out_channels=C,
-                 nonlinear_conv1_out_channels=C, nonlinear_conv2_out_channels=C,
+                 phi0_out_channels, T_out_channels,
+                 nonlinear_conv1_out_channels, nonlinear_conv2_out_channels,
                  final_out_channels=1,  # For N x N matrix
                  filter_size=5):
         """

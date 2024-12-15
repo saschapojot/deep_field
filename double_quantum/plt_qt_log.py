@@ -4,10 +4,19 @@ import matplotlib.pyplot as plt
 from model_qt_dsnn_config import *
 
 #this script plots training loss
+N=10
+C=20
+decrease_over = 50
 
+decrease_rate = 0.7
+step_num_after_S1=6
+num_epochs = 5
+decrease_overStr=format_using_decimal(decrease_over)
+decrease_rateStr=format_using_decimal(decrease_rate)
+suffix_str=f"_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}"
 in_model_dir=f"./out_model_data/N{N}/C{C}/layer{step_num_after_S1}/"
 
-log_fileName=in_model_dir +"/training_log.txt"
+log_fileName=in_model_dir +f"/training_log{suffix_str}.txt"
 
 
 # Open the file and read each line
@@ -48,4 +57,4 @@ plt.legend(fontsize=12)
 for step in range(0, len(loss_vec), decrease_over):
     plt.axvline(x=step, color='pink', linestyle='dotted', linewidth=1.2)
 plt.tight_layout()
-plt.savefig(in_model_dir+f"/loss.png")
+plt.savefig(in_model_dir+f"/loss{suffix_str}.png")
