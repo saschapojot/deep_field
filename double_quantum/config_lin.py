@@ -6,7 +6,7 @@ N = 10  # Replace with your desired value (must be an even number)
 
 # Generate the 2D indices from 0 to N/2 - 1
 half_N = N // 2
-print(f"half_N={half_N}")
+# print(f"half_N={half_N}")
 indices = list(itertools.combinations_with_replacement(range(half_N), 2))
 # Generate unique pairs of [i, j] and [k, l] combinations with repetition
 unique_pairs = list(itertools.combinations_with_replacement(indices, 2))
