@@ -37,6 +37,8 @@ for i in range(num_samples):
         Sigma_combined, unique_pairs_with_displacements, four_body_combinations_with_displacements
     )
     features_list.append(features)
+    if i%1000==0:
+        print(f"processed i={i}")
 
 
 X_test_features=np.array(features_list)
