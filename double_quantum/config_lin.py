@@ -48,7 +48,7 @@ for displacement in displacements:
         )
         four_body_combinations_with_displacements.append(displaced_combination)
 
-
+print(f"len(four_body_combinations_with_displacements)={len(four_body_combinations_with_displacements)}")
 
 def generate_interaction_features_combined(Sigma_combined,unique_pairs_with_displacements,four_body_combinations_with_displacements):
     """
