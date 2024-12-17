@@ -32,9 +32,7 @@ with open(fileNameTest, 'rb') as f:
 X_test = torch.tensor(X_test, dtype=torch.float64).to(device)
 Y_test = torch.tensor(Y_test, dtype=torch.float64).view(-1, 1).to(device)
 
-# Convert to PyTorch tensors
-X_test = torch.tensor(X_test, dtype=torch.float64).to(device)
-Y_test = torch.tensor(Y_test, dtype=torch.float64).view(-1, 1).to(device)
+
 
 # Set model to evaluation mode
 model = DSNN(num_spins=L, num_layers=num_layers, num_neurons=num_neurons).double()

@@ -38,28 +38,28 @@ def all_rGeneric_comb_2_E(spin_config,selected_r_comb,J_vec):
         E_val+=-J_tmp*np.prod(spin_vec_tmp)
     return E_val
 
-A=1
+A=2
 # System Parameters
-L = 50 # Number of spins
-r = 5 # Number of spins in each interaction term
+L = 15# Number of spins
+r = 3 # Number of spins in each interaction term
 
 seed=17
 np.random.seed(seed)
-N_samples=int(2*1e6)
+N_samples=int(20000)
 B = list(combinations(range(L), r))
 # print(len(B))
 # print(B[0])
 # print(B[134])
-K=40
+K=len(B)
 print(f"K={K}")
 
 unique_integers = np.random.choice(range(0, len(B)), size=K, replace=False)
-print(unique_integers)
+# print(unique_integers)
 # print(unique_integers)
 # Generate random spin configurations
-spin_configurations_samples = np.random.choice([-1, 1], size=(N_samples, L))
-J_vec=[np.random.normal(0,A) for _ in range(0,K)]
-split_ratio=0.5
+spin_configurations_samples = np.random.choice([0, 1], size=(N_samples, L))
+J_vec=[np.random.normal(1,A) for _ in range(0,K)]
+split_ratio=0.8
 
 B_selected=[B[ind] for ind in unique_integers]
 # print(B_selected)
@@ -77,7 +77,7 @@ def generate_data(spin_configurations_samples,selected_r_comb,J_vec,train_ratio)
     tGenStart = datetime.now()
     for spin_config in spin_configurations_samples:
         energies.append(all_rGeneric_comb_2_E(spin_config,selected_r_comb,J_vec))
-        if counter%50000==0:
+        if counter%5000==0:
             print("processed :"+str(counter))
             tGenEnd=datetime.now()
             print("time: ",tGenEnd-tGenStart)
