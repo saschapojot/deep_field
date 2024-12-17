@@ -31,7 +31,7 @@ with open(fileNameTrain,"rb") as fptr:
 
 
 num_sample,num_spins=X_train.shape
-
+print(f"num_sample={num_sample}")
 num_epochs =int(num_sample/batch_size*epoch_multiple)
 print(f"num_epochs={num_epochs}")
 X_train = torch.tensor(X_train, dtype=torch.float64).to(device)  # Move to device

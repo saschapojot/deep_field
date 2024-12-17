@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-
+from itertools import combinations
 import pickle
 from decimal import Decimal, getcontext
 import numpy as np
@@ -103,19 +103,24 @@ class CustomDataset(Dataset):
     def __getitem__(self, idx):
         return self.X[idx], self.Y[idx]
 # System Parameters
-L = 50  # Number of spins
-r = 5  # Number of spins in each interaction term
+L = 15# Number of spins
+r = 3 # Number of spins in each interaction term
 # Reduce learning rate by a factor of gamma every step_size epochs
-decrease_over=500
-decrease_rate=0.9
+B = list(combinations(range(L), r))
+# print(len(B))
+# print(B[0])
+# print(B[134])
+K=len(B)
+decrease_over=100
+decrease_rate=0.97
 
 # num_layers = 5  # Number of DSNN layers
-num_neurons = int(L*0.9)  # Number of neurons per layer
-batch_size = 5000
+num_neurons = int(L*1.2)  # Number of neurons per layer
+batch_size = 1000
 learning_rate = 0.001
 weight_decay = 0.01  # L2 regularization strength
 
-epoch_multiple=10
+epoch_multiple=500
 
 # Define device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
