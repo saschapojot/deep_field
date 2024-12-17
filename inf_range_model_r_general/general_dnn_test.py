@@ -43,7 +43,7 @@ class DNN(nn.Module):
 
         return E
 
-num_layers =2
+num_layers =3
 K=455
 data_inDir=f"./data_inf_range_model_L{L}_K_{K}_r{r}/"
 fileNameTest=data_inDir+"/inf_range.test.pkl"

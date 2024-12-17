@@ -2,11 +2,11 @@ import numpy as np
 import pickle
 from scipy.special import binom
 import matplotlib.pyplot as plt
-
+from model_dsnn_config import *
 # System Parameters
-L = 50  # Number of spins
-K=40
-r = 5   # Number of spins in each interaction term
+# L = 15  # Number of spins
+# K=40
+# r = 5   # Number of spins in each interaction term
 
 data_inDir=f"./data_inf_range_model_L{L}_K_{K}_r{r}/"
 fileNameTrain=data_inDir+"/inf_range.train.pkl"
@@ -36,3 +36,6 @@ plt.ylabel('#')  # Label for the y-axis
 plt.title('Histogram of y_test')  # Title of the plot
 plt.savefig("y_test_stats.png")
 plt.close()
+y_train_mean=np.mean(y_train)
+
+print(f"y_train_mean={y_train_mean}")
