@@ -90,8 +90,8 @@ C=int(sys.argv[5])
 
 N=int(sys.argv[6])
 inDir=f"./train_test_data/N{N}/"
-
-in_pkl_train_file=inDir+"/db.train.pkl"
+num_samples_in=200000
+in_pkl_train_file=inDir+f"/db.train_num_samples{num_samples_in}.pkl"
 
 with open(in_pkl_train_file,"rb") as fptr:
     X_train, Y_train=pickle.load(fptr)
@@ -182,7 +182,7 @@ Path(out_model_dir).mkdir(exist_ok=True,parents=True)
 decrease_overStr=format_using_decimal(decrease_over)
 decrease_rateStr=format_using_decimal(decrease_rate)
 
-suffix_str=f"_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}"
+suffix_str=f"_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}_num_samples{num_samples_in}"
 # Save training log to file
 with open(out_model_dir+f"/training_log{suffix_str}.txt", "w") as f:
     f.writelines(loss_file_content)

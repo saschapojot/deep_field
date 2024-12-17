@@ -212,7 +212,7 @@ tStart=datetime.now()
 
 
 I_N2=np.eye(N**2)
-num_samples=20000
+num_samples=200000
 seed_vec=range(100,100+num_samples)
 data,values=gen_dataset(num_samples,N,T0_mat,T1_mat,T2_mat,T3_mat,t,J,mu,I_N2,T,seed_vec)
 
@@ -248,12 +248,12 @@ X_train, Y_train, X_test, Y_test=generate_train_test(data,values,train_ratio)
 outDir=f"./train_test_data/N{N}/"
 Path(outDir).mkdir(exist_ok=True,parents=True)
 
-out_fileName_train=outDir+"/db.train.pkl"
+out_fileName_train=outDir+f"/db.train_num_samples{num_samples}.pkl"
 
 with open(out_fileName_train,"wb") as fptr:
     pickle.dump((X_train,Y_train),fptr)
 
-out_fileName_test=outDir+"/db.test.pkl"
+out_fileName_test=outDir+f"/db.test_num_samples{num_samples}.pkl"
 
 with open(out_fileName_test,"wb") as fptr:
     pickle.dump((X_test, Y_test), fptr)
