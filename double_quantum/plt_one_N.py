@@ -14,8 +14,8 @@ decrease_rate = 0.6
 num_epochs = 1000
 
 #layer-1
-step_num_after_S1_vec=[1,3,5]
-C_vec=[10,20,30,40]
+step_num_after_S1_vec=[0,1,2]
+C_vec=[10,15,20,25,30]
 
 decrease_overStr=format_using_decimal(decrease_over)
 decrease_rateStr=format_using_decimal(decrease_rate)
@@ -79,9 +79,21 @@ ind1=2
 plt.scatter(C_vec,relative_acc[ind1,:],color="green",marker="s",label=f"n={step_num_after_S1_vec[ind1]+1}")
 plt.plot(C_vec,relative_acc[ind1,:],color="green",linestyle="dashed")
 
+# ind1=3
+# plt.scatter(C_vec,relative_acc[ind1,:],color="grey",marker="+",label=f"n={step_num_after_S1_vec[ind1]+1}")
+# plt.plot(C_vec,relative_acc[ind1,:],color="grey",linestyle="dashed")
+
+lin_mean_mse=3.276297899701797
+lin_mean_std=np.sqrt(lin_mean_mse)
+lin_err_relative=lin_mean_std/abs_Y_train_avg
+
+print(f"lin_err_relative={lin_err_relative}")
+plt.axhline(y=lin_err_relative, color="magenta", linestyle="--", linewidth=1, label=f"Effective model")
 plt.xlabel("C value")
 plt.ylabel("Relative error")
 # Move Y-axis label to the right
 plt.gca().yaxis.set_label_position("right")  # Move label to the right
 plt.legend(loc="best")
 plt.savefig(out_pic_dir+f"N{N}.png")
+
+# print(np.sqrt(0.09)/abs_Y_train_avg)

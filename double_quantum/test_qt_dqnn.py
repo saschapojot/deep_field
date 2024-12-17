@@ -36,10 +36,26 @@ def evaluate_model(model, test_loader, device):
     average_loss = total_loss / len(test_loader.dataset)
     return average_loss
 
+N=10
+C=30
+#layer
+step_num_after_S1=2
+
+decrease_over = 50
+
+decrease_rate = 0.6
 
 
+num_epochs = 1000
 
-inDir=f"./train_test_data/N{N}/C{C}"
+decrease_overStr=format_using_decimal(decrease_over)
+decrease_rateStr=format_using_decimal(decrease_rate)
+
+suffix_str=f"_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}"
+in_model_dir=f"./out_model_data/N{N}/C{C}/layer{step_num_after_S1}/"
+
+in_model_file=in_model_dir+f"/dsnn_qt_trained_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}.pth"
+inDir=f"./train_test_data/N{N}/"
 
 in_pkl_test_file=inDir+"/db.test.pkl"
 
@@ -70,10 +86,18 @@ model = dsnn_qt(
         filter_size=filter_size
     )
 
-model_path=f"./out_model_data/N{N}/C{C}/layer{step_num_after_S1}/dsnn_qt_trained.pth"
-model.load_state_dict(torch.load(model_path, map_location=device))  # Load saved weights
+
+model.load_state_dict(torch.load(in_model_file, map_location=device))  # Load saved weights
 model.to(device)  # Move model to device
 
 # Evaluate the model
 test_loss = evaluate_model(model, test_loader, device)
+std_loss=np.sqrt(test_loss)
 print(f"Test Loss (MSE): {test_loss:.6f}")
+
+outTxtFile=in_model_dir+f"/test_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}.txt"
+
+out_content=f"MSE_loss={format_using_decimal(test_loss)}, std_loss={format_using_decimal(std_loss)}  N={N}, C={C}, layer={step_num_after_S1}, decrease_over={decrease_overStr}, decrease_rate={decrease_rateStr}, num_epochs={num_epochs}"
+
+with open(outTxtFile,"w+") as fptr:
+    fptr.write(out_content)
