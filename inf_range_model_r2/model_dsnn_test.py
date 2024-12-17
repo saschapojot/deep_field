@@ -16,7 +16,7 @@ from model_dsnn_config import num_layers,num_neurons,L,r,device
 
 data_inDir=f"./data_inf_range_model_L{L}_r{r}/"
 fileNameTest=data_inDir+"/inf_range.test.pkl"
-
+print(f"num_layers={num_layers}")
 model_inDir=f"./out_model_L{L}_r{r}_layer{num_layers}/"
 
 model_file=model_inDir+"/DSNN_model.pth"
@@ -58,5 +58,11 @@ print(f"Test Loss: {test_loss:.4f}")
 errors = np.array(errors)
 
 # Compute the variance of the errors
-error_variance = np.var(errors)
-print(f"Error Variance: {error_variance:.8f}")
+# error_variance = np.var(errors)
+# print(f"Error Variance: {error_variance:.8f}")
+std_loss=np.sqrt(test_loss)
+outTxtFile=model_inDir+f"test_DSNN.txt"
+
+out_content=f"MSE_loss={format_using_decimal(test_loss)}, std_loss={format_using_decimal(std_loss)}\n"
+with open(outTxtFile,"w+") as fptr:
+    fptr.write(out_content)

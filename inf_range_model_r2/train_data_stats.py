@@ -19,3 +19,8 @@ plt.xlabel('Value')  # Label for the x-axis
 plt.ylabel('#')  # Label for the y-axis
 plt.title('Histogram of y_train')  # Title of the plot
 plt.savefig("y_train_stats.png")
+
+
+y_train_mean=np.mean(y_train)
+
+print(f"y_train_mean={y_train_mean}")
