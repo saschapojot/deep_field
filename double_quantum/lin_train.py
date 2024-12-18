@@ -2,9 +2,10 @@ from config_lin import *
 import pickle
 import sys
 from datetime import datetime
-from sklearn.linear_model import LinearRegression
+# from sklearn.linear_model import LinearRegression
 import joblib
 from pathlib import Path
+from sklearn.linear_model import SGDRegressor
 
 inDir=f"./train_test_data/N{N}/"
 
@@ -40,13 +41,19 @@ X_train_features = np.array(features_list)  # Shape: (num_samples, num_features)
 tFeaturesEnd=datetime.now()
 
 print(f"feature time: {tFeaturesEnd-tFeaturesStart}")
+
+regressor = SGDRegressor()
+batch_size = 1000
+num_samples = X_train_features.shape[0]
 tFitStart=datetime.now()
 # Initialize the regression model with fit_intercept=True (default behavior)
-regressor = LinearRegression(fit_intercept=True)
+# regressor = LinearRegression(fit_intercept=True)
 
 # Fit the model
-regressor.fit(X_train_features, Y_train_array)
-
+# regressor.fit(X_train_features, Y_train_array)
+for start in range(0, num_samples, batch_size):
+    end = start + batch_size
+    regressor.partial_fit(X_train_features[start:end], Y_train_array[start:end])
 lin_model_out_dir="./lin_model_out/"
 Path(lin_model_out_dir).mkdir(exist_ok=True,parents=True)
 

@@ -68,16 +68,17 @@ out_pic_dir=f"./compare/N{N}/"
 plt.figure()
 
 ind0=0
-plt.scatter(C_vec,relative_acc[ind0,:],color="blue",marker="o",label=f"n={step_num_after_S1_vec[ind0]+1}")
+plt.scatter(C_vec,relative_acc[ind0,:],color="blue",marker="o",label=f"EFNN, n={step_num_after_S1_vec[ind0]+1}")
 plt.plot(C_vec,relative_acc[ind0,:],color="blue",linestyle="dashed")
 
 ind1=1
-plt.scatter(C_vec,relative_acc[ind1,:],color="red",marker="^",label=f"n={step_num_after_S1_vec[ind1]+1}")
-plt.plot(C_vec,relative_acc[ind1,:],color="red",linestyle="dashed")
-
-ind1=2
-plt.scatter(C_vec,relative_acc[ind1,:],color="green",marker="s",label=f"n={step_num_after_S1_vec[ind1]+1}")
-plt.plot(C_vec,relative_acc[ind1,:],color="green",linestyle="dashed")
+plt.scatter(C_vec,relative_acc[ind1,:],color="magenta",marker="^",label=f"EFNN, n={step_num_after_S1_vec[ind1]+1}")
+plt.plot(C_vec,relative_acc[ind1,:],color="magenta",linestyle="dashed")
+plt.yscale("log")
+plt.xticks(C_vec)
+# ind1=2
+# plt.scatter(C_vec,relative_acc[ind1,:],color="green",marker="s",label=f"n={step_num_after_S1_vec[ind1]+1}")
+# plt.plot(C_vec,relative_acc[ind1,:],color="green",linestyle="dashed")
 
 # ind1=3
 # plt.scatter(C_vec,relative_acc[ind1,:],color="grey",marker="+",label=f"n={step_num_after_S1_vec[ind1]+1}")
@@ -88,9 +89,10 @@ lin_mean_std=np.sqrt(lin_mean_mse)
 lin_err_relative=lin_mean_std/abs_Y_train_avg
 
 print(f"lin_err_relative={lin_err_relative}")
-plt.axhline(y=lin_err_relative, color="magenta", linestyle="--", linewidth=1, label=f"Effective model")
-plt.xlabel("C value")
+plt.axhline(y=lin_err_relative, color="cyan", linestyle="--", linewidth=1, label=f"Effective model")
+plt.xlabel("Channel number")
 plt.ylabel("Relative error")
+plt.title("Performance on test set")
 # Move Y-axis label to the right
 plt.gca().yaxis.set_label_position("right")  # Move label to the right
 plt.legend(loc="best")
