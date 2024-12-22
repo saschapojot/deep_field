@@ -8,7 +8,7 @@ from pathlib import Path
 
 inDir=f"./train_test_data/N{N}/"
 
-in_pkl_train_file=inDir+"/db.train.pkl"
+in_pkl_train_file=inDir+"/db.train_num_samples200000.pkl"
 
 with open(in_pkl_train_file,"rb") as fptr:
     X_train, Y_train=pickle.load(fptr)
