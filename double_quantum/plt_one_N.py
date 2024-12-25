@@ -6,7 +6,7 @@ import numpy as np
 from model_qt_dsnn_config import *
 
 #this script compares test loss for the same N, different layer numbers, different C values
-
+#this script needs to manually input lin's mse, from slurm output on supercomputer
 N=10
 
 decrease_over = 50
@@ -19,7 +19,7 @@ C_vec=[10,15,20,25,30]
 
 decrease_overStr=format_using_decimal(decrease_over)
 decrease_rateStr=format_using_decimal(decrease_rate)
-suffix_str=f"_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}"
+suffix_str=f"_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}_num_samples200000"
 
 def C_2_test_file(step_num_after_S1,C):
     in_model_dir = f"./out_model_data/N{N}/C{C}/layer{step_num_after_S1}/"
@@ -64,7 +64,7 @@ for layer in step_num_after_S1_vec:
 relative_acc=np.array(std_vec_for_each_layer_num)/abs_Y_train_avg
 
 out_pic_dir=f"./compare/N{N}/"
-
+Path(out_pic_dir).mkdir(parents=True, exist_ok=True)
 plt.figure()
 
 ind0=0
@@ -76,15 +76,15 @@ plt.scatter(C_vec,relative_acc[ind1,:],color="magenta",marker="^",label=f"EFNN, 
 plt.plot(C_vec,relative_acc[ind1,:],color="magenta",linestyle="dashed")
 plt.yscale("log")
 plt.xticks(C_vec)
-# ind1=2
-# plt.scatter(C_vec,relative_acc[ind1,:],color="green",marker="s",label=f"n={step_num_after_S1_vec[ind1]+1}")
-# plt.plot(C_vec,relative_acc[ind1,:],color="green",linestyle="dashed")
+ind1=2
+plt.scatter(C_vec,relative_acc[ind1,:],color="green",marker="s",label=f"EFNN, n={step_num_after_S1_vec[ind1]+1}")
+plt.plot(C_vec,relative_acc[ind1,:],color="green",linestyle="dashed")
 
 # ind1=3
 # plt.scatter(C_vec,relative_acc[ind1,:],color="grey",marker="+",label=f"n={step_num_after_S1_vec[ind1]+1}")
 # plt.plot(C_vec,relative_acc[ind1,:],color="grey",linestyle="dashed")
 
-lin_mean_mse=3.276297899701797
+lin_mean_mse=0.9847254886017068
 lin_mean_std=np.sqrt(lin_mean_mse)
 lin_err_relative=lin_mean_std/abs_Y_train_avg
 
