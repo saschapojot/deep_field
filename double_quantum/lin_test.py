@@ -4,21 +4,23 @@ from config_lin import *
 import pickle
 import sys
 from datetime import datetime
-from sklearn.linear_model import LinearRegression
+# from sklearn.linear_model import LinearRegression
 import joblib
 from pathlib import Path
 from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
 import matplotlib.pyplot as plt
+from sklearn.linear_model import SGDRegressor
 
 inDir=f"./train_test_data/N{N}/"
 
-in_pkl_test_file=inDir+"/db.test.pkl"
+in_pkl_test_file=inDir+"/db.test_num_samples200000.pkl"
 with open(in_pkl_test_file,"rb") as fptr:
     X_test, Y_test = pickle.load(fptr)
 
 X_test_array = np.array(X_test)  # Shape: (num_samples, 3,N, N, )
 Y_test_array = np.array(Y_test)  # Shape: (num_samples,)
-
+print(f"X_test_array.shape=f{X_test_array.shape}")
+print(f"Y_test_array.shape=f{Y_test_array.shape}")
 lin_model_out_dir="./lin_model_out/"
 
 in_model_fileName=lin_model_out_dir+"/lin.joblib"

@@ -8,13 +8,13 @@ from pathlib import Path
 
 inDir=f"./train_test_data/N{N}/"
 
-in_pkl_train_file=inDir+"/db.train.pkl"
+in_pkl_train_file=inDir+"/db.train_num_samples200000.pkl"
 
 with open(in_pkl_train_file,"rb") as fptr:
     X_train, Y_train=pickle.load(fptr)
 
 
-X_train_array = np.array(X_train)  # Shape: (num_samples, 3,N, N, )
+# X_train_array = np.array(X_train)  # Shape: (num_samples, 3,N, N, )
 Y_train_array = np.array(Y_train)  # Shape: (num_samples,)
 
 # tFeaturesStart=datetime.now()
@@ -40,6 +40,8 @@ features_in_file = lin_model_out_dir + "/X_train_features.pkl"
 with open(features_in_file, "rb") as fptr:
     X_train_features = pickle.load(fptr)
 tFitStart=datetime.now()
+print(f"X_train_features.shape={X_train_features.shape}")
+print(f"Y_train_array.shape={Y_train_array.shape}")
 # Initialize the regression model with fit_intercept=True (default behavior)
 regressor = LinearRegression(fit_intercept=True)
 
