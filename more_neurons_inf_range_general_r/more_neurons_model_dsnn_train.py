@@ -56,7 +56,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=
 
 scheduler = StepLR(optimizer, step_size=decrease_over, gamma=decrease_rate)
 
-out_model_Dir=f"./out_model_L{L}_K{K}_r{r}_layer{num_layers}/"
+out_model_Dir=f"./out_model_L{L}_K{K}_r{r}_layer{num_layers}_neurons{num_neurons}/"
 Path(out_model_Dir).mkdir(exist_ok=True,parents=True)
 loss_file_content=[]
 
