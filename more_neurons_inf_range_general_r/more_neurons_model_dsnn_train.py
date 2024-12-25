@@ -98,6 +98,7 @@ for epoch in range(num_epochs):
     # Optionally print the current learning rate
     current_lr = scheduler.get_last_lr()[0]
     print(f"Learning Rate after Epoch {epoch + 1}: {current_lr:.8e}")
+    loss_file_content.append(f"Learning Rate after Epoch {epoch + 1}: {current_lr:.8e}")
 
 # Save the loss log
 with open(out_model_Dir + "/DSNN_training_log.txt", "w+") as fptr:
