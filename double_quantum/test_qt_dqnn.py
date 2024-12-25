@@ -54,7 +54,7 @@ decrease_rateStr=format_using_decimal(decrease_rate)
 suffix_str=f"_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}"
 in_model_dir=f"./out_model_data/N{N}/C{C}/layer{step_num_after_S1}/"
 
-in_model_file=in_model_dir+f"/dsnn_qt_trained_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}.pth"
+in_model_file=in_model_dir+f"dsnn_qt_trained_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}_num_samples200000.pth"
 inDir=f"./train_test_data/N{N}/"
 
 in_pkl_test_file=inDir+"/db.test.pkl"
@@ -95,7 +95,7 @@ test_loss = evaluate_model(model, test_loader, device)
 std_loss=np.sqrt(test_loss)
 print(f"Test Loss (MSE): {test_loss:.6f}")
 
-outTxtFile=in_model_dir+f"/test_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}.txt"
+outTxtFile=in_model_dir+f"/test_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}_num_samples200000.txt"
 
 out_content=f"MSE_loss={format_using_decimal(test_loss)}, std_loss={format_using_decimal(std_loss)}  N={N}, C={C}, layer={step_num_after_S1}, decrease_over={decrease_overStr}, decrease_rate={decrease_rateStr}, num_epochs={num_epochs}"
 
