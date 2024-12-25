@@ -112,7 +112,7 @@ B = list(combinations(range(L), r))
 # print(B[134])
 K=len(B)
 decrease_over=100
-decrease_rate=0.98
+decrease_rate=0.99
 
 # num_layers = 5  # Number of DSNN layers
 # num_neurons = int(L*1.2)  # Number of neurons per layer
@@ -120,7 +120,7 @@ batch_size = 1000
 learning_rate = 0.001
 weight_decay = 0.01  # L2 regularization strength
 
-epoch_multiple=500
+epoch_multiple=1000
 
 # Define device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
