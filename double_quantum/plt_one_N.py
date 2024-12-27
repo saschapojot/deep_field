@@ -15,7 +15,7 @@ num_epochs = 1000
 
 #layer-1
 step_num_after_S1_vec=[0,1,2]
-C_vec=[10,15,20,25,30]
+C_vec=[10,15,20,25,30,35,40]
 
 decrease_overStr=format_using_decimal(decrease_over)
 decrease_rateStr=format_using_decimal(decrease_rate)
@@ -92,10 +92,10 @@ print(f"lin_err_relative={lin_err_relative}")
 plt.axhline(y=lin_err_relative, color="cyan", linestyle="--", linewidth=1, label=f"Effective model")
 plt.xlabel("Channel number")
 plt.ylabel("Relative error")
-plt.title("Performance on test set")
+plt.title("EFNN vs effective model")
 # Move Y-axis label to the right
 plt.gca().yaxis.set_label_position("right")  # Move label to the right
 plt.legend(loc="best")
-plt.savefig(out_pic_dir+f"N{N}.png")
+plt.savefig(out_pic_dir+f"N{N}.pdf")
 
 # print(np.sqrt(0.09)/abs_Y_train_avg)

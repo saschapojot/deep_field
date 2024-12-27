@@ -5,7 +5,7 @@ from model_qt_dsnn_config import *
 
 #this script plots training loss
 N=10
-C=30
+C=40
 #layer
 step_num_after_S1=2
 

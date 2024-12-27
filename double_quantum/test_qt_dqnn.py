@@ -37,9 +37,9 @@ def evaluate_model(model, test_loader, device):
     return average_loss
 
 N=10
-C=30
+C=40
 #layer
-step_num_after_S1=2
+step_num_after_S1=1
 
 decrease_over = 50
 
@@ -51,20 +51,20 @@ num_epochs = 1000
 decrease_overStr=format_using_decimal(decrease_over)
 decrease_rateStr=format_using_decimal(decrease_rate)
 
-suffix_str=f"_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}"
+suffix_str=f"_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}_num_samples200000"
 in_model_dir=f"./out_model_data/N{N}/C{C}/layer{step_num_after_S1}/"
 
 in_model_file=in_model_dir+f"dsnn_qt_trained_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}_num_samples200000.pth"
 inDir=f"./train_test_data/N{N}/"
 
-in_pkl_test_file=inDir+"/db.test.pkl"
+in_pkl_test_file=inDir+"/db.test_num_samples200000.pkl"
 
 with open(in_pkl_test_file,"rb") as fptr:
     X_test, Y_test = pickle.load(fptr)
 
 X_test_array=np.array(X_test)
 Y_test_array=np.array(Y_test)
-
+print(f"Y_test_array.shape={Y_test_array.shape}")
 
 X_test_tensor=torch.tensor(X_test_array,dtype=torch.float)
 
