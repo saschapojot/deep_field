@@ -53,7 +53,7 @@ ax1.set_title("EFNN vs DNN",fontsize=20)
 
 outDir="./fig_efnn_vs_dnn/"
 plt.tight_layout()
-plt.savefig(outDir+"/efnn_vs_dnn.pdf")
+plt.savefig(outDir+"/efnn_vs_dnn.svg")
 
 plt.close()
 
@@ -80,6 +80,6 @@ ax2.set_ylabel("Relative error",fontsize=18)
 ax2.set_title("3 FP layers, more neurons",fontsize=20)
 ax2.yaxis.set_label_position("right")  # Move y-label to the right
 plt.tight_layout()
-plt.savefig(outDir+"/more_neurons.pdf")
+plt.savefig(outDir+"/more_neurons.svg")
 
 plt.close()
