@@ -8,28 +8,30 @@ from datetime import datetime
 from torch.optim.lr_scheduler import StepLR
 from torch.utils.data import Dataset, DataLoader
 from pathlib import Path
-from model_dsnn_config import format_using_decimal,DSNN,CustomDataset,L,r,decrease_over
-from model_dsnn_config import  num_neurons,decrease_rate,batch_size,learning_rate,weight_decay
-from model_dsnn_config import  epoch_multiple,device
+from more_neurons_model_dsnn_config import format_using_decimal,DSNN,CustomDataset,L,r,decrease_over
+from more_neurons_model_dsnn_config import  decrease_rate,batch_size,learning_rate,weight_decay
+from more_neurons_model_dsnn_config import  epoch_multiple,device
 
 
 
 
 
-if (len(sys.argv) != 3):
+if (len(sys.argv) != 4):
     print("wrong number of arguments.")
     exit(21)
 
 
 num_layers = int(sys.argv[1])
 K=int(sys.argv[2])
+num_neurons=int(sys.argv[3])
+
 data_inDir=f"./data_inf_range_model_L{L}_K_{K}_r{r}/"
 fileNameTrain=data_inDir+"/inf_range.train.pkl"
 
 with open(fileNameTrain,"rb") as fptr:
     X_train, Y_train = pickle.load(fptr)
 
-
+print(f"num_neurons={num_neurons}")
 num_sample,num_spins=X_train.shape
 print(f"num_sample={num_sample}")
 num_epochs =int(num_sample/batch_size*epoch_multiple)
@@ -54,7 +56,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=
 
 scheduler = StepLR(optimizer, step_size=decrease_over, gamma=decrease_rate)
 
-out_model_Dir=f"./out_model_L{L}_K{K}_r{r}_layer{num_layers}/"
+out_model_Dir=f"./out_model_L{L}_K{K}_r{r}_layer{num_layers}_neurons{num_neurons}/"
 Path(out_model_Dir).mkdir(exist_ok=True,parents=True)
 loss_file_content=[]
 
@@ -65,11 +67,10 @@ tTrainStart = datetime.now()
 for epoch in range(num_epochs):
     model.train()
     epoch_loss = 0
-    # dataCount=0
+
     for X_batch, Y_batch in dataloader:
         X_batch, Y_batch = X_batch.to(device), Y_batch.to(device)  # Move batch to device
-        nRow,_=X_batch.shape
-        # dataCount+=nRow
+
         # Forward pass
         predictions = model(X_batch)
 
@@ -88,7 +89,6 @@ for epoch in range(num_epochs):
     average_loss = epoch_loss / len(dataset)
 
     # Print and log epoch summary
-    # print(f"dataCount={dataCount}")
     print(f"Epoch [{epoch + 1}/{num_epochs}], Loss: {average_loss:.4f}")
     loss_file_content.append(f"Epoch [{epoch + 1}/{num_epochs}], Loss: {average_loss:.8f}\n")
 
@@ -97,7 +97,8 @@ for epoch in range(num_epochs):
 
     # Optionally print the current learning rate
     current_lr = scheduler.get_last_lr()[0]
-    print(f"Learning Rate after Epoch {epoch + 1}: {current_lr:.8e}")
+    print(f"Learning Rate after Epoch {epoch + 1}: {current_lr:.8e}\n")
+    loss_file_content.append(f"Learning Rate after Epoch {epoch + 1}: {current_lr:.8e}\n")
 
 # Save the loss log
 with open(out_model_Dir + "/DSNN_training_log.txt", "w+") as fptr:

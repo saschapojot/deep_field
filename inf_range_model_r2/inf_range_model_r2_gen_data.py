@@ -37,19 +37,20 @@ def all_r2_comb_2_E(spin_config,all_r2_comb,J_vec):
         E_val+=-J_tmp*spin_config[v_tmp[0]]*spin_config[v_tmp[1]]
     return E_val
 
-A=1
+A=2
 # System Parameters
 L = 15  # Number of spins
 r = 2   # Number of spins in each interaction term
 
-# seed=17
-# np.random.seed(seed)
-N_samples=15000
+
+seed=17
+np.random.seed(seed)
+N_samples=20000
 B = list(combinations(range(L), r))
 K=len(B)
 # Generate random spin configurations
-spin_configurations_samples = np.random.choice([-1, 1], size=(N_samples, L))
-J_vec=[np.random.normal(0,A) for _ in range(0,K)]
+spin_configurations_samples = np.random.choice([0, 1], size=(N_samples, L))
+J_vec=[np.random.normal(1,A) for _ in range(0,K)]
 
 
 def generate_data(spin_configurations_samples,all_r2_comb,J_vec,train_ratio=0.8):

@@ -10,6 +10,7 @@ from torch.utils.data import Dataset, DataLoader
 from pathlib import Path
 
 
+
 def format_using_decimal(value, precision=10):
     # Set the precision higher to ensure correct conversion
     getcontext().prec = precision + 2
@@ -103,18 +104,21 @@ class CustomDataset(Dataset):
     def __getitem__(self, idx):
         return self.X[idx], self.Y[idx]
 # System Parameters
-L = 15  # Number of spins
-r = 2   # Number of spins in each interaction term
+L = 15# Number of spins
+r = 2 # Number of spins in each interaction term
 # Reduce learning rate by a factor of gamma every step_size epochs
 decrease_over=100
-decrease_rate=0.9
-num_layers = 5  # Number of DSNN layers
+
+decrease_rate=0.7
+num_layers = 3  # Number of DSNN layers
 num_neurons = int(L*2)  # Number of neurons per layer
-batch_size = 64
+batch_size = 500
 learning_rate = 0.001
 weight_decay = 0.01  # L2 regularization strength
 
-epoch_multiple=20
+
+# epoch_multiple=50#for DSNN
+epoch_multiple=200#for DNN
 
 # Define device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

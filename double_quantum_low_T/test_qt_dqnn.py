@@ -37,27 +37,28 @@ def evaluate_model(model, test_loader, device):
     return average_loss
 
 N=10
-C=40
+C=25
 #layer
-step_num_after_S1=1
+step_num_after_S1=0
 
 decrease_over = 50
 
-decrease_rate = 0.6
+decrease_rate = 0.95
 
 
 num_epochs = 1000
 
+numSample=400000
 decrease_overStr=format_using_decimal(decrease_over)
 decrease_rateStr=format_using_decimal(decrease_rate)
 
-suffix_str=f"_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}_num_samples200000"
+suffix_str=f"_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}_num_samples{numSample}"
 in_model_dir=f"./out_model_data/N{N}/C{C}/layer{step_num_after_S1}/"
 
-in_model_file=in_model_dir+f"dsnn_qt_trained_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}_num_samples200000.pth"
+in_model_file=in_model_dir+f"dsnn_qt_trained_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}_num_samples{numSample}.pth"
 inDir=f"./train_test_data/N{N}/"
 
-in_pkl_test_file=inDir+"/db.test_num_samples200000.pkl"
+in_pkl_test_file=inDir+f"/db.test_num_samples{numSample}.pkl"
 
 with open(in_pkl_test_file,"rb") as fptr:
     X_test, Y_test = pickle.load(fptr)
@@ -70,7 +71,7 @@ X_test_tensor=torch.tensor(X_test_array,dtype=torch.float)
 
 Y_test_tensor=torch.tensor(Y_test_array,dtype=torch.float)
 
-batch_size = 100  # Define batch size
+batch_size = 1000  # Define batch size
 # Create test dataset and DataLoader
 test_dataset = CustomDataset(X_test_tensor, Y_test_tensor)
 test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False)  # Batch size can be adjusted
@@ -95,7 +96,7 @@ test_loss = evaluate_model(model, test_loader, device)
 std_loss=np.sqrt(test_loss)
 print(f"Test Loss (MSE): {test_loss:.6f}")
 
-outTxtFile=in_model_dir+f"/test_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}_num_samples200000.txt"
+outTxtFile=in_model_dir+f"/test_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}_num_samples{numSample}.txt"
 
 out_content=f"MSE_loss={format_using_decimal(test_loss)}, std_loss={format_using_decimal(std_loss)}  N={N}, C={C}, layer={step_num_after_S1}, decrease_over={decrease_overStr}, decrease_rate={decrease_rateStr}, num_epochs={num_epochs}"
 

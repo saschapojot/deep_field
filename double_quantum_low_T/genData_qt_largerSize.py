@@ -2,7 +2,7 @@ import numpy as np
 import sys
 from model_qt_dsnn_config import *
 
-#This script generates data for double exchange quantum model
+#This script generates data for double exchange quantum model, used for larger size
 
 
 def generate_uniform_matrix(N, low=0, high=2*np.pi, seed=None):
@@ -210,9 +210,9 @@ def gen_dataset(num_samples,N,T0_mat,T1_mat,T2_mat,T3_mat,t,J,mu,I_N2,T,seed_vec
 
 tStart=datetime.now()
 
-
+print(f"T={T}")
 I_N2=np.eye(N**2)
-num_samples=40000
+num_samples=80000
 seed_vec=range(100,100+num_samples)
 data,values=gen_dataset(num_samples,N,T0_mat,T1_mat,T2_mat,T3_mat,t,J,mu,I_N2,T,seed_vec)
 
@@ -248,10 +248,10 @@ X_train, Y_train, X_test, Y_test=generate_train_test(data,values,train_ratio)
 outDir=f"./train_test_data/N{N}/"
 Path(outDir).mkdir(exist_ok=True,parents=True)
 
-out_fileName_train=outDir+f"/db.train_num_samples{num_samples}.pkl"
-
-with open(out_fileName_train,"wb") as fptr:
-    pickle.dump((X_train,Y_train),fptr)
+# out_fileName_train=outDir+f"/db.train_num_samples{num_samples}.pkl"
+#
+# with open(out_fileName_train,"wb") as fptr:
+#     pickle.dump((X_train,Y_train),fptr)
 
 out_fileName_test=outDir+f"/db.test_num_samples{num_samples}.pkl"
 

@@ -1,23 +1,28 @@
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
+import sys
 import pickle
 from decimal import Decimal, getcontext
 import numpy as np
 from datetime import datetime
-
+from torch.optim.lr_scheduler import StepLR
 from torch.utils.data import Dataset, DataLoader
+from pathlib import Path
+from more_neurons_model_dsnn_config import format_using_decimal,DSNN,CustomDataset,L,r,decrease_over
+from more_neurons_model_dsnn_config import  decrease_rate,batch_size,learning_rate,weight_decay
+from more_neurons_model_dsnn_config import  epoch_multiple,device
+import glob
 
-from model_dsnn_config import format_using_decimal, DSNN,CustomDataset
+num_layers=3
+num_neurons=60
+K=455
 
-from model_dsnn_config import num_layers,num_neurons,L,r,device
-
-
-
-data_inDir=f"./data_inf_range_model_L{L}_r{r}/"
+data_inDir=f"./data_inf_range_model_L{L}_K_{K}_r{r}/"
+# for fl in glob.glob(f"{data_inDir}/*"):
+#     print(fl)
 fileNameTest=data_inDir+"/inf_range.test.pkl"
-print(f"num_layers={num_layers}")
-model_inDir=f"./out_model_L{L}_r{r}_layer{num_layers}/"
+
+model_inDir=f"./out_model_L{L}_K{K}_r{r}_layer{num_layers}_neurons{num_neurons}/"
 
 model_file=model_inDir+"/DSNN_model.pth"
 
@@ -28,8 +33,11 @@ with open(fileNameTest, 'rb') as f:
 X_test = torch.tensor(X_test, dtype=torch.float64).to(device)
 Y_test = torch.tensor(Y_test, dtype=torch.float64).view(-1, 1).to(device)
 
+print(f"Y_test.shape={Y_test.shape}")
+
 # Set model to evaluation mode
 model = DSNN(num_spins=L, num_layers=num_layers, num_neurons=num_neurons).double()
+
 criterion = nn.MSELoss()
 model.load_state_dict(torch.load(model_file))
 

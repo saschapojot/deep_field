@@ -47,7 +47,7 @@ plt.title(f"{name}: Training Loss Over Epochs", fontsize=14)
 # plt.grid(True)
 plt.legend(fontsize=12)
 # Add vertical dotted lines every step_size steps
-for step in range(0, len(loss_vec), decrease_over):
-    plt.axvline(x=step, color='pink', linestyle='dotted', linewidth=1.2)
+# for step in range(0, len(loss_vec), decrease_over):
+#     plt.axvline(x=step, color='pink', linestyle='dotted', linewidth=1.2)
 plt.tight_layout()
 plt.savefig(in_model_Dir+f"/{name}_loss.png")

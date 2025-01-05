@@ -1,5 +1,6 @@
 from model_qt_dsnn_config import *
 
+#this function loads test data for larger lattices
 
 # Evaluation Function
 def evaluate_model(model, test_loader, device):
@@ -35,11 +36,11 @@ def evaluate_model(model, test_loader, device):
     # Compute average loss
     average_loss = total_loss / len(test_loader.dataset)
     return average_loss
-
-N=10
-C=40
+N_for_model=10
+N=30
+C=30
 #layer
-step_num_after_S1=1
+step_num_after_S1=2
 
 decrease_over = 50
 
@@ -52,12 +53,13 @@ decrease_overStr=format_using_decimal(decrease_over)
 decrease_rateStr=format_using_decimal(decrease_rate)
 
 suffix_str=f"_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}_num_samples200000"
-in_model_dir=f"./out_model_data/N{N}/C{C}/layer{step_num_after_S1}/"
+in_model_dir=f"./out_model_data/N{N_for_model}/C{C}/layer{step_num_after_S1}/"
 
 in_model_file=in_model_dir+f"dsnn_qt_trained_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}_num_samples200000.pth"
 inDir=f"./train_test_data/N{N}/"
 
-in_pkl_test_file=inDir+"/db.test_num_samples200000.pkl"
+num_suffix=40000
+in_pkl_test_file=inDir+f"/db.test_num_samples{num_suffix}.pkl"
 
 with open(in_pkl_test_file,"rb") as fptr:
     X_test, Y_test = pickle.load(fptr)
@@ -95,7 +97,10 @@ test_loss = evaluate_model(model, test_loader, device)
 std_loss=np.sqrt(test_loss)
 print(f"Test Loss (MSE): {test_loss:.6f}")
 
-outTxtFile=in_model_dir+f"/test_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}_num_samples200000.txt"
+outResultDir=f"./larger_lattice_test_performance/N{N}/C{C}/layer{step_num_after_S1}/"
+Path(outResultDir).mkdir(parents=True, exist_ok=True)
+
+outTxtFile=outResultDir+f"/test_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}_num_samples{num_suffix}.txt"
 
 out_content=f"MSE_loss={format_using_decimal(test_loss)}, std_loss={format_using_decimal(std_loss)}  N={N}, C={C}, layer={step_num_after_S1}, decrease_over={decrease_overStr}, decrease_rate={decrease_rateStr}, num_epochs={num_epochs}"
 
