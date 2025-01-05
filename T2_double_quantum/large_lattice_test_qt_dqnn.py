@@ -37,29 +37,29 @@ def evaluate_model(model, test_loader, device):
     average_loss = total_loss / len(test_loader.dataset)
     return average_loss
 N_for_model=10
-N=30
-C=30
+N=20
+C=25
 #layer
-step_num_after_S1=2
+step_num_after_S1=0
 
 decrease_over = 50
 
-decrease_rate = 0.6
+decrease_rate = 0.95
 
-
-num_epochs = 1000
+num_data_train_test=200000
+num_epochs = 1200
 
 decrease_overStr=format_using_decimal(decrease_over)
 decrease_rateStr=format_using_decimal(decrease_rate)
 
-suffix_str=f"_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}_num_samples200000"
+# suffix_str=f"_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}_num_samples200000"
 in_model_dir=f"./out_model_data/N{N_for_model}/C{C}/layer{step_num_after_S1}/"
 
-in_model_file=in_model_dir+f"dsnn_qt_trained_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}_num_samples200000.pth"
-inDir=f"./train_test_data/N{N}/"
+in_model_file=in_model_dir+f"dsnn_qt_trained_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}_num_samples{num_data_train_test}.pth"
+in_pkl_Dir=f"./larger_lattice_test_performance/N{N}/C{C}/layer{step_num_after_S1}/"
 
 num_suffix=40000
-in_pkl_test_file=inDir+f"/db.test_num_samples{num_suffix}.pkl"
+in_pkl_test_file=in_pkl_Dir +f"/db.test_num_samples{num_suffix}.pkl"
 
 with open(in_pkl_test_file,"rb") as fptr:
     X_test, Y_test = pickle.load(fptr)
@@ -72,7 +72,7 @@ X_test_tensor=torch.tensor(X_test_array,dtype=torch.float)
 
 Y_test_tensor=torch.tensor(Y_test_array,dtype=torch.float)
 
-batch_size = 100  # Define batch size
+batch_size = 1000  # Define batch size
 # Create test dataset and DataLoader
 test_dataset = CustomDataset(X_test_tensor, Y_test_tensor)
 test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False)  # Batch size can be adjusted
@@ -97,7 +97,7 @@ test_loss = evaluate_model(model, test_loader, device)
 std_loss=np.sqrt(test_loss)
 print(f"Test Loss (MSE): {test_loss:.6f}")
 
-outResultDir=f"./larger_lattice_test_performance/N{N}/C{C}/layer{step_num_after_S1}/"
+outResultDir=in_pkl_Dir
 Path(outResultDir).mkdir(parents=True, exist_ok=True)
 
 outTxtFile=outResultDir+f"/test_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}_num_samples{num_suffix}.txt"

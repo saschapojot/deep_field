@@ -2,7 +2,7 @@ import numpy as np
 import sys
 from model_qt_dsnn_config import *
 
-#This script generates data for double exchange quantum model
+#This script generates data for double exchange quantum model, used for larger size
 
 
 def generate_uniform_matrix(N, low=0, high=2*np.pi, seed=None):
@@ -54,10 +54,9 @@ def generate_Sigmax_Sigmay_Sigmaz(N,seed=None):
 argErrCode=3
 if (len(sys.argv)!=2):
     print("wrong number of arguments")
-    print("example: genData_qt.py N")
+    print("example: python launch_one_run.py num_epochs decrease_over decrease_rate step_num_after_S1 C N")
     exit(argErrCode)
 N=int(sys.argv[1])
-print(f"T={T}")
 #construct T0, T1 mat
 T0_mat=np.zeros((N**2,N**2),dtype=float)
 
@@ -213,9 +212,9 @@ def gen_dataset(num_samples,N,T0_mat,T1_mat,T2_mat,T3_mat,t,J,mu,I_N2,T,seed_vec
 
 tStart=datetime.now()
 
-
+print(f"T={T}")
 I_N2=np.eye(N**2)
-num_samples=200000
+num_samples=40000
 seed_vec=range(100,100+num_samples)
 data,values=gen_dataset(num_samples,N,T0_mat,T1_mat,T2_mat,T3_mat,t,J,mu,I_N2,T,seed_vec)
 
@@ -239,7 +238,7 @@ def generate_train_test(data,values,train_ratio):
 
 
 
-train_ratio=0.8
+train_ratio=0
 
 
 
@@ -251,10 +250,10 @@ X_train, Y_train, X_test, Y_test=generate_train_test(data,values,train_ratio)
 outDir=f"./train_test_data/N{N}/"
 Path(outDir).mkdir(exist_ok=True,parents=True)
 
-out_fileName_train=outDir+f"/db.train_num_samples{num_samples}.pkl"
-
-with open(out_fileName_train,"wb") as fptr:
-    pickle.dump((X_train,Y_train),fptr)
+# out_fileName_train=outDir+f"/db.train_num_samples{num_samples}.pkl"
+#
+# with open(out_fileName_train,"wb") as fptr:
+#     pickle.dump((X_train,Y_train),fptr)
 
 out_fileName_test=outDir+f"/db.test_num_samples{num_samples}.pkl"
 

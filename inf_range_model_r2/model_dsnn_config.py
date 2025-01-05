@@ -108,12 +108,14 @@ L = 15# Number of spins
 r = 2 # Number of spins in each interaction term
 # Reduce learning rate by a factor of gamma every step_size epochs
 decrease_over=100
+
 decrease_rate=0.7
 num_layers = 3  # Number of DSNN layers
 num_neurons = int(L*2)  # Number of neurons per layer
 batch_size = 500
 learning_rate = 0.001
 weight_decay = 0.01  # L2 regularization strength
+
 
 # epoch_multiple=50#for DSNN
 epoch_multiple=200#for DNN

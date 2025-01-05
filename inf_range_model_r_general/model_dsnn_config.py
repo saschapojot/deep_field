@@ -19,7 +19,13 @@ def format_using_decimal(value, precision=10):
     formatted_value = decimal_value.quantize(Decimal(1)) if decimal_value == decimal_value.to_integral() else decimal_value.normalize()
     return str(formatted_value)
 
+class ReciprocalActivation(nn.Module):
+    def __init__(self, epsilon=1e-6):
+        super(ReciprocalActivation, self).__init__()
+        self.epsilon = epsilon  # Small value to prevent division by zero
 
+    def forward(self, x):
+        return 1.0 / (x**2+self.epsilon)
 
 class DSNN(nn.Module):
     def __init__(self, num_spins, num_layers, num_neurons):
@@ -40,7 +46,8 @@ class DSNN(nn.Module):
             [nn.Sequential(
             nn.Linear(num_spins if i==1 else num_neurons , num_neurons),
             nn.Tanh(),
-            nn.Linear(num_neurons, num_neurons)
+                # ReciprocalActivation(),
+                nn.Linear(num_neurons, num_neurons)
         ) for i in range(1,num_layers+1)]
         )
 
@@ -49,7 +56,8 @@ class DSNN(nn.Module):
             [nn.Sequential(
             nn.Linear(num_spins  , num_neurons),
             nn.Tanh(),
-            nn.Linear(num_neurons, num_neurons)
+                # ReciprocalActivation(),
+                nn.Linear(num_neurons, num_neurons)
         ) for i in range(1,num_layers+1)]
         )
 
@@ -57,6 +65,7 @@ class DSNN(nn.Module):
         self.output_layer = nn.Sequential(
             nn.Linear(num_neurons, num_neurons),  # Optional intermediate transformation
             nn.Tanh(),
+            # ReciprocalActivation(),
             nn.Linear(num_neurons, 1)  # Final mapping to scalar
         )
 
@@ -103,6 +112,7 @@ class CustomDataset(Dataset):
     def __getitem__(self, idx):
         return self.X[idx], self.Y[idx]
 # System Parameters
+
 L = 15# Number of spins
 r = 3 # Number of spins in each interaction term
 # Reduce learning rate by a factor of gamma every step_size epochs

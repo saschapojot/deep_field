@@ -12,8 +12,10 @@ import sys
 
 #this script defines the neural network, and gives parameters
 
+
 # step_num_after_S1=6
 # N=7
+
 
 t=1
 
@@ -21,7 +23,9 @@ J=16*t
 mu=-8.3*t
 T=0.1*t
 
-# C=20
+
+C=30
+
 
 filter_size=5
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

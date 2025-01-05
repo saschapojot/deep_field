@@ -42,6 +42,7 @@ A=2
 L = 15  # Number of spins
 r = 2   # Number of spins in each interaction term
 
+
 seed=17
 np.random.seed(seed)
 N_samples=20000

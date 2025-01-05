@@ -40,20 +40,24 @@ def all_rGeneric_comb_2_E(spin_config,selected_r_comb,J_vec):
 
 A=2
 # System Parameters
+
 L = 15# Number of spins
 r = 3 # Number of spins in each interaction term
 
 seed=17
 np.random.seed(seed)
 N_samples=int(20000)
+
 B = list(combinations(range(L), r))
-# print(len(B))
+print(f"len(B)={len(B)}")
 # print(B[0])
 # print(B[134])
 K=len(B)
 print(f"K={K}")
 
+
 unique_integers = np.random.choice(range(0, len(B)), size=K, replace=False)
+
 # print(unique_integers)
 # print(unique_integers)
 # Generate random spin configurations
