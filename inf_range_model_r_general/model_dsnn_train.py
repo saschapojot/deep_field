@@ -65,10 +65,11 @@ tTrainStart = datetime.now()
 for epoch in range(num_epochs):
     model.train()
     epoch_loss = 0
-
+    # dataCount=0
     for X_batch, Y_batch in dataloader:
         X_batch, Y_batch = X_batch.to(device), Y_batch.to(device)  # Move batch to device
-
+        nRow,_=X_batch.shape
+        # dataCount+=nRow
         # Forward pass
         predictions = model(X_batch)
 
@@ -87,6 +88,7 @@ for epoch in range(num_epochs):
     average_loss = epoch_loss / len(dataset)
 
     # Print and log epoch summary
+    # print(f"dataCount={dataCount}")
     print(f"Epoch [{epoch + 1}/{num_epochs}], Loss: {average_loss:.4f}")
     loss_file_content.append(f"Epoch [{epoch + 1}/{num_epochs}], Loss: {average_loss:.8f}\n")
 
