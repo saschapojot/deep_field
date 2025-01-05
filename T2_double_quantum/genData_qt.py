@@ -57,6 +57,7 @@ if (len(sys.argv)!=2):
     print("example: python launch_one_run.py num_epochs decrease_over decrease_rate step_num_after_S1 C N")
     exit(argErrCode)
 N=int(sys.argv[1])
+print(f"T={T}")
 #construct T0, T1 mat
 T0_mat=np.zeros((N**2,N**2),dtype=float)
 
@@ -215,7 +216,7 @@ I_N2=np.eye(N**2)
 num_samples=200000
 seed_vec=range(100,100+num_samples)
 data,values=gen_dataset(num_samples,N,T0_mat,T1_mat,T2_mat,T3_mat,t,J,mu,I_N2,T,seed_vec)
-print(f"T={T}")
+
 
 def generate_train_test(data,values,train_ratio):
     """
