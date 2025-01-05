@@ -11,7 +11,7 @@ from model_qt_dsnn_config import *
 layer_num=0
 C=25
 
-N_vec=[10,15]
+N_vec=[10,15,20]
 step_num_after_S1=0
 
 decrease_over = 50
@@ -65,7 +65,7 @@ for j in range(0,len(pkl_file_vec)):
 std_loss_vec=np.array(std_loss_vec)
 abs_avg_Y_train=np.array(abs_avg_Y_train_vec)
 N_2_vec=np.array(N_vec)**2
-relative_error=std_loss_vec/abs_avg_Y_train
+relative_error=std_loss_vec/N_2_vec
 N_vec=np.array(N_vec)
 # N_vec=N_vec.reshape(-1, 1)
 # log_N = np.log(N_vec).reshape(-1, 1)

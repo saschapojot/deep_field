@@ -37,7 +37,7 @@ def evaluate_model(model, test_loader, device):
     average_loss = total_loss / len(test_loader.dataset)
     return average_loss
 N_for_model=10
-N=10
+N=20
 C=25
 #layer
 step_num_after_S1=0
