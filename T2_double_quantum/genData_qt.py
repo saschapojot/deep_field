@@ -54,7 +54,7 @@ def generate_Sigmax_Sigmay_Sigmaz(N,seed=None):
 argErrCode=3
 if (len(sys.argv)!=2):
     print("wrong number of arguments")
-    print("example: python launch_one_run.py num_epochs decrease_over decrease_rate step_num_after_S1 C N")
+    print("example: genData_qt.py N")
     exit(argErrCode)
 N=int(sys.argv[1])
 #construct T0, T1 mat
