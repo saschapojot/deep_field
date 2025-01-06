@@ -118,10 +118,10 @@ plt_fit_E_pred=model_E_vs_N(plt_pred_N_vec_to_fit,gamma,delta,c_pred)
 #E_true,E_pred, E_true_fit,E_pred_fit
 plt.figure()
 # plt.plot(N_vec,abs_mean_vec,color="green",linestyle="dashed",linewidth=2,label="data")
-plt.scatter(N_vec,abs_mean_vec,color="green",label="data")#E_true
+plt.scatter(N_vec,abs_mean_vec,color="green",label="E_true")#E_true
 plt.plot(plt_true_N_vec_to_fit,plt_fit_E_true,color="lime",linestyle='--',label="E_true_fit",)#E_true fit
 # plt.plot(N_vec,abs_pred_mean_vec,color="red",linestyle="dashed",linewidth=2,label="data")
-plt.scatter(N_vec,abs_pred_mean_vec,color="red",label="data")#E_pred
+plt.scatter(N_vec,abs_pred_mean_vec,color="red",label="E_pred")#E_pred
 plt.plot(plt_pred_N_vec_to_fit,plt_fit_E_pred,color="magenta",linestyle="-.",label="E_pred_fit")#E_pred fit
 plt.title("|mean| vs $N$ in data and pred")
 plt.xlabel("$N$")

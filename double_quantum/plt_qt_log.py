@@ -5,13 +5,13 @@ from model_qt_dsnn_config import *
 
 #this script plots training loss
 N=10
-C=40
+C=25
 #layer
-step_num_after_S1=2
+step_num_after_S1=0
 
 decrease_over = 50
 
-decrease_rate = 0.6
+decrease_rate = 0.9
 
 num_epochs = 1000
 decrease_overStr=format_using_decimal(decrease_over)

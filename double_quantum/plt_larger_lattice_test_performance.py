@@ -98,6 +98,7 @@ plt.plot(N_vec,custom_err_vec,color="magenta",linestyle="dashed",label="custom e
 plt.scatter(N_vec,custom_err_vec,color="red",marker="o")
 plt.xlabel("$N$")
 plt.ylabel(r"Custom error")
+plt.title(r"$\epsilon(N)$ vs N")
 plt.savefig(inDirRoot+"/custom_error.png")
 plt.close()
 
