@@ -5,7 +5,7 @@ from model_qt_dsnn_config import *
 #     return (E_pred-E_true)**2/E_true**2
 
 # Evaluation Function
-def evaluate_model(model, test_loader, device):
+def evaluate_model(N,beta,delta,model, test_loader, device):
     """
     Evaluate the trained model on the test dataset.
 
@@ -35,7 +35,9 @@ def evaluate_model(model, test_loader, device):
             # print(f"Y_batch size: {Y_batch.shape}")
             # print(f"predictions.shape={predictions.shape}")
             all_predictions.append(predictions.cpu())
-            batch_custom_metric = ((predictions - Y_batch) ** 2 / (Y_batch ** 2)).sum().item()
+            predictions_tilde=predictions/N**delta
+            Y_batch_tilde=Y_batch/N**beta
+            batch_custom_metric = ((predictions_tilde - Y_batch_tilde) ** 2 / (Y_batch_tilde ** 2)).sum().item()
             custom_metric_sum += batch_custom_metric
 
 
@@ -50,6 +52,8 @@ def evaluate_model(model, test_loader, device):
 N_for_model=10
 N=35
 C=25
+beta=1.9999403561992048
+delta=2.026271899527667
 #layer
 step_num_after_S1=0
 
@@ -104,7 +108,7 @@ model.load_state_dict(torch.load(in_model_file, map_location=device))  # Load sa
 model.to(device)  # Move model to device
 
 # Evaluate the model
-test_loss,predictions,custom_metric_sum = evaluate_model(model, test_loader, device)
+test_loss,predictions,custom_metric_sum = evaluate_model(N,beta,delta,model, test_loader, device)
 std_loss=np.sqrt(test_loss)
 # print(predictions)
 print(f"Test Loss (MSE): {test_loss:.6f}")

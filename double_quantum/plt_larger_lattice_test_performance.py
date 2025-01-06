@@ -11,7 +11,7 @@ from model_qt_dsnn_config import *
 layer_num=0
 C=25
 rate=0.9
-N_vec=[10,15,20,25,30,35]
+N_vec=np.array([10,15,20,25,30,35])
 num_suffix=40000
 num_epochs = 1000
 inDirRoot="./larger_lattice_test_performance/"
@@ -92,7 +92,7 @@ plt.savefig(inDirRoot+f"/larger_lattice_test_performance_rate{rate}_layer{layer_
 
 plt.close()
 
-
+custom_err_vec=np.array(custom_err_vec)
 plt.figure()
 plt.plot(N_vec,custom_err_vec,color="magenta",linestyle="dashed",label="custom error")
 plt.scatter(N_vec,custom_err_vec,color="red",marker="o")
