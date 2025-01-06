@@ -81,7 +81,7 @@ def custom_loss(predictions, targets, regularization_strength=0.01):
         torch.Tensor: The computed loss.
     """
     # Compute the squared error, normalized by targets^2
-    error_term = torch.mean(((predictions - targets) ** 2) / (targets ** 2))
+    error_term = torch.sum(((predictions - targets) ** 2) / (targets ** 2))
 
     # L2 regularization term (using the model parameters, or just predictions if preferred)
     regularization_term = torch.norm(predictions, p=2)
