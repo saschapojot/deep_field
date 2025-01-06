@@ -2,7 +2,7 @@ from model_qt_dsnn_config import *
 import sys
 
 
-#manually setting custom error using fitted value
+#custom error during training
 
 def set_random_seed(seed):
     """
