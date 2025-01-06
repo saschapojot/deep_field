@@ -1,8 +1,8 @@
 from model_qt_dsnn_config import *
 
 #this function loads test data for larger lattices
-def diff_2_ratio(E_pred,E_true):
-    return (E_pred-E_true)**2/E_true**2
+# def diff_2_ratio(E_pred,E_true):
+#     return (E_pred-E_true)**2/E_true**2
 
 # Evaluation Function
 def evaluate_model(model, test_loader, device):
@@ -109,7 +109,7 @@ std_loss=np.sqrt(test_loss)
 # print(predictions)
 print(f"Test Loss (MSE): {test_loss:.6f}")
 print(f"custom_metric_sum={custom_metric_sum:.6f}")
-custom_err=np.sqrt(custom_metric_sum/len(predictions)/N**2)
+custom_err=np.sqrt(custom_metric_sum/len(predictions))
 print(f"custom_err={custom_err:.6f}")
 predictions=np.array(predictions)
 # print(f"len(predictions)={len(predictions)}")
