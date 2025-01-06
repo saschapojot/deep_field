@@ -205,6 +205,8 @@ def gen_dataset(num_samples,N,T0_mat,T1_mat,T2_mat,T3_mat,t,J,mu,I_N2,T,seed_vec
         E_tmp=vec_2_E(eigValsTmp,T)
         data.append(Sigma_combined_tmp)
         values.append(E_tmp)
+        if j%5000==0:
+            print(f"j={j}")
 
     return data, values
 

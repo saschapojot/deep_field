@@ -18,7 +18,7 @@ def evaluate_model(model, test_loader, device):
     model.eval()  # Set model to evaluation mode
     total_loss = 0.0
     criterion = torch.nn.MSELoss()  # Loss function
-
+    all_predictions = []  # To store all predictions
     with torch.no_grad():  # No need to compute gradients during evaluation
         for X_batch, Y_batch in test_loader:
             X_batch, Y_batch = X_batch.to(device), Y_batch.to(device)  # Move data to device
@@ -28,6 +28,7 @@ def evaluate_model(model, test_loader, device):
 
             # Forward pass
             predictions = model(X_batch, S1, steps=step_num_after_S1)
+            all_predictions.append(predictions.cpu())
 
             # Compute loss
             loss = criterion(predictions, Y_batch)
@@ -35,16 +36,17 @@ def evaluate_model(model, test_loader, device):
 
     # Compute average loss
     average_loss = total_loss / len(test_loader.dataset)
-    return average_loss
+    all_predictions = torch.cat(all_predictions, dim=0)
+    return average_loss,all_predictions
 N_for_model=10
-N=30
-C=30
+N=35
+C=25
 #layer
-step_num_after_S1=2
+step_num_after_S1=0
 
 decrease_over = 50
 
-decrease_rate = 0.6
+decrease_rate = 0.9
 
 
 num_epochs = 1000
@@ -52,11 +54,11 @@ num_epochs = 1000
 decrease_overStr=format_using_decimal(decrease_over)
 decrease_rateStr=format_using_decimal(decrease_rate)
 
-suffix_str=f"_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}_num_samples200000"
+# suffix_str=f"_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}_num_samples200000"
 in_model_dir=f"./out_model_data/N{N_for_model}/C{C}/layer{step_num_after_S1}/"
 
 in_model_file=in_model_dir+f"dsnn_qt_trained_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}_num_samples200000.pth"
-inDir=f"./train_test_data/N{N}/"
+inDir=f"./larger_lattice_test_performance/N{N}/C{C}/layer{step_num_after_S1}/"
 
 num_suffix=40000
 in_pkl_test_file=inDir+f"/db.test_num_samples{num_suffix}.pkl"
@@ -72,7 +74,7 @@ X_test_tensor=torch.tensor(X_test_array,dtype=torch.float)
 
 Y_test_tensor=torch.tensor(Y_test_array,dtype=torch.float)
 
-batch_size = 100  # Define batch size
+batch_size = 1000  # Define batch size
 # Create test dataset and DataLoader
 test_dataset = CustomDataset(X_test_tensor, Y_test_tensor)
 test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False)  # Batch size can be adjusted
@@ -93,16 +95,20 @@ model.load_state_dict(torch.load(in_model_file, map_location=device))  # Load sa
 model.to(device)  # Move model to device
 
 # Evaluate the model
-test_loss = evaluate_model(model, test_loader, device)
+test_loss,predictions = evaluate_model(model, test_loader, device)
 std_loss=np.sqrt(test_loss)
+# print(predictions)
 print(f"Test Loss (MSE): {test_loss:.6f}")
+predictions=np.array(predictions)
+pred_mean=np.mean(predictions)
+pred_std = np.std(predictions)
 
 outResultDir=f"./larger_lattice_test_performance/N{N}/C{C}/layer{step_num_after_S1}/"
 Path(outResultDir).mkdir(parents=True, exist_ok=True)
 
 outTxtFile=outResultDir+f"/test_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}_num_samples{num_suffix}.txt"
 
-out_content=f"MSE_loss={format_using_decimal(test_loss)}, std_loss={format_using_decimal(std_loss)}  N={N}, C={C}, layer={step_num_after_S1}, decrease_over={decrease_overStr}, decrease_rate={decrease_rateStr}, num_epochs={num_epochs}"
+out_content=f"MSE_loss={format_using_decimal(test_loss)}, std_loss={format_using_decimal(std_loss)}  N={N}, C={C}, layer={step_num_after_S1}, decrease_over={decrease_overStr}, decrease_rate={decrease_rateStr}, num_epochs={num_epochs}, pred_mean={pred_mean}, pred_std={pred_std}"
 
 with open(outTxtFile,"w+") as fptr:
     fptr.write(out_content)

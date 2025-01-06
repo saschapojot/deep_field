@@ -4,7 +4,11 @@ import numpy as np
 
 
 from model_qt_dsnn_config import *
+import matplotlib as mpl
 
+# Enable LaTeX rendering
+mpl.rc('text', usetex=True)
+mpl.rc('font', family='serif', serif=['Computer Modern'])
 #this script compares test loss for the same N, different layer numbers, different C values
 #this script needs to manually input lin's mse, from slurm output on supercomputer
 N=10
@@ -79,10 +83,11 @@ plt.xticks(C_vec)
 ind1=2
 plt.scatter(C_vec,relative_acc[ind1,:],color="green",marker="s",label=f"EFNN, n={step_num_after_S1_vec[ind1]+1}")
 plt.plot(C_vec,relative_acc[ind1,:],color="green",linestyle="dashed")
-
+print(relative_acc[ind1,:])
 # ind1=3
 # plt.scatter(C_vec,relative_acc[ind1,:],color="grey",marker="+",label=f"n={step_num_after_S1_vec[ind1]+1}")
 # plt.plot(C_vec,relative_acc[ind1,:],color="grey",linestyle="dashed")
+plt.yticks([0.007,0.01,0.02],labels=[r"0.007", "0.01", "0.02"])
 
 lin_mean_mse=0.9847254886017068
 lin_mean_std=np.sqrt(lin_mean_mse)
@@ -90,9 +95,9 @@ lin_err_relative=lin_mean_std/abs_Y_train_avg
 
 print(f"lin_err_relative={lin_err_relative}")
 plt.axhline(y=lin_err_relative, color="cyan", linestyle="--", linewidth=1, label=f"Effective model")
-plt.xlabel("Channel number")
-plt.ylabel("Relative error")
-plt.title("EFNN vs effective model")
+plt.xlabel("Channel number",fontsize=19)
+plt.ylabel("Relative error",fontsize=20)
+plt.title("EFNN vs effective model",fontsize=25)
 # Move Y-axis label to the right
 plt.gca().yaxis.set_label_position("right")  # Move label to the right
 plt.legend(loc="best")

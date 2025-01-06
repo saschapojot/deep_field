@@ -37,13 +37,13 @@ def evaluate_model(model, test_loader, device):
     return average_loss
 
 N=10
-C=40
+C=30
 #layer
 step_num_after_S1=1
 
 decrease_over = 50
 
-decrease_rate = 0.6
+decrease_rate = 0.9
 
 
 num_epochs = 1000
