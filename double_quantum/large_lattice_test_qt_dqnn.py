@@ -1,6 +1,8 @@
 from model_qt_dsnn_config import *
 
 #this function loads test data for larger lattices
+def diff_2_ratio(E_pred,E_true):
+    return (E_pred-E_true)**2/E_true**2
 
 # Evaluation Function
 def evaluate_model(model, test_loader, device):
@@ -19,6 +21,7 @@ def evaluate_model(model, test_loader, device):
     total_loss = 0.0
     criterion = torch.nn.MSELoss()  # Loss function
     all_predictions = []  # To store all predictions
+    custom_metric_sum = 0.0
     with torch.no_grad():  # No need to compute gradients during evaluation
         for X_batch, Y_batch in test_loader:
             X_batch, Y_batch = X_batch.to(device), Y_batch.to(device)  # Move data to device
@@ -28,7 +31,13 @@ def evaluate_model(model, test_loader, device):
 
             # Forward pass
             predictions = model(X_batch, S1, steps=step_num_after_S1)
+            # print(f"len(X_batch)={len(X_batch)}, len(Y_batch)={len(Y_batch)}")
+            # print(f"Y_batch size: {Y_batch.shape}")
+            # print(f"predictions.shape={predictions.shape}")
             all_predictions.append(predictions.cpu())
+            batch_custom_metric = ((predictions - Y_batch) ** 2 / (Y_batch ** 2)).sum().item()
+            custom_metric_sum += batch_custom_metric
+
 
             # Compute loss
             loss = criterion(predictions, Y_batch)
@@ -37,7 +46,7 @@ def evaluate_model(model, test_loader, device):
     # Compute average loss
     average_loss = total_loss / len(test_loader.dataset)
     all_predictions = torch.cat(all_predictions, dim=0)
-    return average_loss,all_predictions
+    return average_loss,all_predictions,custom_metric_sum
 N_for_model=10
 N=35
 C=25
@@ -95,11 +104,15 @@ model.load_state_dict(torch.load(in_model_file, map_location=device))  # Load sa
 model.to(device)  # Move model to device
 
 # Evaluate the model
-test_loss,predictions = evaluate_model(model, test_loader, device)
+test_loss,predictions,custom_metric_sum = evaluate_model(model, test_loader, device)
 std_loss=np.sqrt(test_loss)
 # print(predictions)
 print(f"Test Loss (MSE): {test_loss:.6f}")
+print(f"custom_metric_sum={custom_metric_sum:.6f}")
+custom_err=np.sqrt(custom_metric_sum/len(predictions)/N**2)
+print(f"custom_err={custom_err:.6f}")
 predictions=np.array(predictions)
+# print(f"len(predictions)={len(predictions)}")
 pred_mean=np.mean(predictions)
 pred_std = np.std(predictions)
 
@@ -108,7 +121,7 @@ Path(outResultDir).mkdir(parents=True, exist_ok=True)
 
 outTxtFile=outResultDir+f"/test_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}_num_samples{num_suffix}.txt"
 
-out_content=f"MSE_loss={format_using_decimal(test_loss)}, std_loss={format_using_decimal(std_loss)}  N={N}, C={C}, layer={step_num_after_S1}, decrease_over={decrease_overStr}, decrease_rate={decrease_rateStr}, num_epochs={num_epochs}, pred_mean={pred_mean}, pred_std={pred_std}"
+out_content=f"MSE_loss={format_using_decimal(test_loss)}, std_loss={format_using_decimal(std_loss)}  N={N}, C={C}, layer={step_num_after_S1}, decrease_over={decrease_overStr}, decrease_rate={decrease_rateStr}, num_epochs={num_epochs}, pred_mean={pred_mean}, pred_std={pred_std}, custom_err={custom_err}"
 
 with open(outTxtFile,"w+") as fptr:
     fptr.write(out_content)

@@ -24,7 +24,7 @@ mu=-8.3*t
 T=0.1*t
 
 
-C=30
+C=25
 
 
 filter_size=5

@@ -27,22 +27,34 @@ def N_2_test_data_pkl(N):
     return pkl_test_file
 
 pattern_std=r'std_loss=\s*([+]?(?:\d*\.\d+|\d+)(?:[eE][-+]?\d+)?)'
+pattern_custom_err=r'custom_err\s*=\s*([+]?(?:\d*\.\d+|\d+)(?:[eE][-+]?\d+)?)'
 def file_2_std(test_fileName):
     with open(test_fileName,"r") as fptr:
         line=fptr.readline()
-
+    # print(line)
     match_std_loss=re.search(pattern_std,line)
+    match_custom_err=re.search(pattern_custom_err,line)
     if match_std_loss:
-        return float(match_std_loss.group(1))
+        std_loss= float(match_std_loss.group(1))
     else:
         print("format error")
         exit(12)
+    if match_custom_err:
+        custom_err=float(match_custom_err.group(1))
+    return std_loss,custom_err
+
 
 
 
 file_vec=[N_2_test_file(N) for N in N_vec]
 
-std_loss_vec=[file_2_std(test_fileName) for test_fileName in file_vec]
+
+std_loss_vec=[]
+custom_err_vec=[]
+for file in file_vec:
+    std_loss, custom_err=file_2_std(file)
+    std_loss_vec.append(std_loss)
+    custom_err_vec.append(custom_err)
 
 pkl_file_vec=[N_2_test_data_pkl(N) for N in N_vec]
 
@@ -58,8 +70,8 @@ for j in range(0,len(pkl_file_vec)):
 
 std_loss_vec=np.array(std_loss_vec)
 abs_avg_Y_train=np.array(abs_avg_Y_train_vec)
-N_2_vec=np.array(N_vec)**2.4
-relative_error=std_loss_vec/N_2_vec
+N_2_vec=np.array(N_vec)**2
+relative_error=(std_loss_vec/abs_avg_Y_train)**1/0.5
 print(f"std_loss_vec={std_loss_vec}")
 print(f"relative error: {relative_error}")
 N_vec=np.array(N_vec)
@@ -80,4 +92,12 @@ plt.savefig(inDirRoot+f"/larger_lattice_test_performance_rate{rate}_layer{layer_
 
 plt.close()
 
+
+plt.figure()
+plt.plot(N_vec,custom_err_vec,color="magenta",linestyle="dashed",label="custom error")
+plt.scatter(N_vec,custom_err_vec,color="red",marker="o")
+plt.xlabel("$N$")
+plt.ylabel(r"Custom error")
+plt.savefig(inDirRoot+"/custom_error.png")
+plt.close()
 
