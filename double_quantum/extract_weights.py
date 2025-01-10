@@ -96,6 +96,19 @@ class toFile_Phi0Layer(nn.Module):
 
         return Phi0
 
+    def save_filter(self,outPath):
+        Path(outPath).mkdir(parents=True, exist_ok=True)
+        W0_path = f"{outPath}/shared_conv_W0_weights.pth"
+        W1_path = f"{outPath}/shared_conv_W1_weights.pth"
+        torch.save(self.shared_conv_W0.weight.data, W0_path)
+        print(f"shared_conv_W0 weights saved to {W0_path}")
+
+        torch.save(self.shared_conv_W1.weight.data, W1_path)
+        print(f"shared_conv_W1 weights saved to {W1_path}")
+
+
+
+
 class toFile_TLayer(nn.Module):
     def __init__(self, out_channels, kernel_size, padding=2):
         """
@@ -160,6 +173,17 @@ class toFile_TLayer(nn.Module):
             torch.save(T_result, save_path)
             print("T_result saved to {}".format(save_path))
         return T_result
+
+    def save_filter(self,outPath):
+        Path(outPath).mkdir(parents=True, exist_ok=True)
+        W_first_path=f"{outPath}/shared_conv_W_first.pth"
+        W_second_path=f"{outPath}/shared_conv_W_second.pth"
+
+        torch.save(self.shared_conv_W0.weight.data, W_first_path)
+        print(f"shared_conv_W0 weights saved to {W_first_path}")
+
+        torch.save(self.shared_conv_W1.weight.data, W_second_path)
+        print(f"shared_conv_W1 weights saved to {W_second_path}")
 
 class toFile_NonlinearLayer(nn.Module):
     def __init__(self, in_channels, conv1_out_channels, conv2_out_channels, kernel_size, padding=1):
@@ -288,18 +312,27 @@ class toFile_dsnn_qt(nn.Module):
         # Step 1: Compute F1 from Phi0Layer and NonlinearLayer
         phi0_output = self.phi0_layer(x)
         out_Phi0File=outDir+"/Phi0.pth"
+
         torch.save(phi0_output, out_Phi0File)
+
+        Phi0_layer_coef_dir=outDir+"/filters/Phi0_filters/"
+        self.phi0_layer.save_filter(Phi0_layer_coef_dir)
         print(f"Phi0 saved to {out_Phi0File}")
+
         F1 = self.nonlinear_layer(phi0_output)
         out_F1File=outDir+"/F1.pth"
         torch.save(F1, out_F1File)
         print("F1 saved to {}".format(out_F1File))
+
         # Step 2: Pass input through TLayer and NonlinearLayer
         T_output = self.T_layer(x)#T1
         out_T1File=outDir+"/T1.pth"
         torch.save(T_output, out_T1File)
-
         print("T1 saved to {}".format(out_T1File))
+
+
+
+
         nonlinear_output = self.nonlinear_layer_input(T_output)
 
         # Step 3: Compute S1 as pointwise multiplication of F1 and nonlinear_output
@@ -331,9 +364,12 @@ class toFile_dsnn_qt(nn.Module):
             print(f"F_{ind} saved to {out_F_file}")
             # Step 2: Pass input through TLayer and NonlinearLayer
             T_output = self.T_layer(x)
-            out_T_file=outDir+f"/T_{ind}.pth"
+            out_T_file=outDir+f"/T{ind}.pth"
             torch.save(T_output, out_T_file)
             print(f"T{ind} saved to {out_T_file}")
+            T_layer_coef_dir=outDir+"/filters/T_filters/"
+            self.T_layer.save_filter(T_layer_coef_dir)
+
             nonlinear_output = self.nonlinear_layer_input(T_output)
 
             # Step 3: Compute S_{n+1} as pointwise multiplication of Fn_plus_1 and nonlinear_output
@@ -483,6 +519,6 @@ with torch.no_grad():  # No need for gradients during inference
     prediction = model(single_sample_input, S1, steps=step_num_after_S1)
 
 # Print results
-print(f"Input: {single_sample_input}")
+# print(f"Input: {single_sample_input}")
 print(f"True Target: {single_sample_target.item()}")
 print(f"Prediction: {prediction.item()}")
