@@ -53,6 +53,9 @@ optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=
 # Reduce learning rate by a factor of gamma every step_size epochs
 
 scheduler = StepLR(optimizer, step_size=decrease_over, gamma=decrease_rate)
+decrease_overStr=format_using_decimal(decrease_over)
+decrease_rateStr=format_using_decimal(decrease_rate)
+suffix_str=f"_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}"
 
 out_model_Dir=f"./out_model_L{L}_K{K}_r{r}_layer{num_layers}/"
 Path(out_model_Dir).mkdir(exist_ok=True,parents=True)
@@ -100,11 +103,11 @@ for epoch in range(num_epochs):
     print(f"Learning Rate after Epoch {epoch + 1}: {current_lr:.8e}")
 
 # Save the loss log
-with open(out_model_Dir + "/DSNN_training_log.txt", "w+") as fptr:
+with open(out_model_Dir + f"/DSNN_training_log{suffix_str}.txt", "w+") as fptr:
     fptr.writelines(loss_file_content)
 
 # Save the model
-torch.save(model.state_dict(), out_model_Dir + "/DSNN_model.pth")
+torch.save(model.state_dict(), out_model_Dir + f"/DSNN_model{suffix_str}.pth")
 tTrainEnd = datetime.now()
 
 print("Training time:", tTrainEnd - tTrainStart)
