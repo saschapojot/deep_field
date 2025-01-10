@@ -11,7 +11,7 @@ from pathlib import Path
 import sys
 
 #this script defines the neural network, and gives parameters
-
+#correction: more T, f, g
 
 # step_num_after_S1=6
 # N=7
