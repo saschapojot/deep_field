@@ -8,11 +8,11 @@ inCoefDir="./coefs/"
 width=4
 height=4
 
-
+outCoefDir="../fig_coefs/"
 ###########################################################
 #plot S0_x
 in_S0_file=inCoefDir+"/S0.pth"
-out_S0_dir=inCoefDir+"/S0Pics/"
+out_S0_dir=outCoefDir+"/S0Pics/"
 Path(out_S0_dir).mkdir(parents=True, exist_ok=True)
 S0=torch.load(in_S0_file)
 
@@ -51,13 +51,15 @@ for j in range(0,C_num_to_show):
 # plt.savefig(inCoefDir+"S0_x.svg",format="svg", bbox_inches='tight', pad_inches=0)
 # plt.close()
 ###########################################################
+###########################################################
 
+###########################################################
 
 ###########################################################
 #plot Phi0 (this is T0 in paper)
 cmaps_vec=["Reds","Oranges","Greens","Blues","Purples"]
 in_Phi0_file=inCoefDir+"/Phi0.pth"
-out_Phi0_dir=inCoefDir+"/Phi0Pics/"
+out_Phi0_dir=outCoefDir+"/Phi0Pics/"
 Path(out_Phi0_dir).mkdir(parents=True, exist_ok=True)
 Phi0=torch.load(in_Phi0_file)
 
@@ -103,7 +105,7 @@ for j in range(0,C_num_to_show):
 #plt F1
 cmaps_vec=["Reds","Oranges","Greens","Blues","Purples"]
 in_F1_file=inCoefDir+"/F1.pth"
-out_F1_dir=inCoefDir+"/F1Pics/"
+out_F1_dir=outCoefDir+"/F1Pics/"
 Path(out_F1_dir).mkdir(parents=True, exist_ok=True)
 F1=torch.load(in_F1_file)
 
@@ -132,13 +134,78 @@ for j in range(0,C_num_to_show):
     plt.close()
 
 ###########################################################
+#plt conv_W0
+cmaps_vec=["Reds","Oranges","Greens","Blues","Purples"]
+in_conv_W0_file=inCoefDir+"/conv_W0.pth"
+out_conv_W0_dir=outCoefDir+"/conv_W0Pics/"
+Path(out_conv_W0_dir).mkdir(parents=True, exist_ok=True)
+conv_W0=torch.load(in_conv_W0_file)
+print(f"conv_W0[0].shape={conv_W0[0].shape}")
+C_num_to_show=5
+conv_W0_to_plt=(conv_W0[0][0,0:C_num_to_show,:,:]).detach().numpy()
+for j in range(0,C_num_to_show):
+    plt.figure(figsize=(width, height))
+    conv_W0_channel_j=conv_W0_to_plt[j,:,:]
+    plt.imshow(conv_W0_channel_j,cmap=cmaps_vec[j],interpolation='nearest')
+    plt.axis('off')
+    plt.tight_layout()
+    plt.savefig(out_conv_W0_dir+f"/conv_W0_channel{j}.svg",format="svg", bbox_inches='tight', pad_inches=0)
+    plt.close()
+
+    #colorbar
+    fig, ax = plt.subplots()  # Adjust the aspect ratio
+    norm = plt.Normalize(vmin=conv_W0_channel_j.min(), vmax=conv_W0_channel_j.max())
+    cb = plt.colorbar(
+        plt.cm.ScalarMappable(norm=norm, cmap=cmaps_vec[j]),  # Use the 'Reds' colormap
+        cax=ax,
+        orientation='vertical'
+    )
+    cb.set_label('Value', fontsize=12)  # Add a label if desired
+    plt.savefig(out_conv_W0_dir + f"/colorbar_conv_W0channel{j}.svg")
+    plt.close()
+###########################################################
+
+#plt conv_W1
+cmaps_vec=["Reds","Oranges","Greens","Blues","Purples"]
+in_conv_W1_file=inCoefDir+"/conv_W1.pth"
+out_conv_W1_dir=outCoefDir+"/conv_W1Pics/"
+Path(out_conv_W1_dir).mkdir(parents=True, exist_ok=True)
+conv_W1=torch.load(in_conv_W1_file)
+print(f"conv_W1[0].shape={conv_W1[0].shape}")
+C_num_to_show=5
+conv_W1_to_plt=(conv_W1[0][0,0:C_num_to_show,:,:]).detach().numpy()
+for j in range(0,C_num_to_show):
+    plt.figure(figsize=(width, height))
+    conv_W1_channel_j=conv_W1_to_plt[j,:,:]
+    plt.imshow(conv_W1_channel_j,cmap=cmaps_vec[j],interpolation='nearest')
+    plt.axis('off')
+    plt.tight_layout()
+    plt.savefig(out_conv_W1_dir+f"/conv_W1_channel{j}.svg",format="svg", bbox_inches='tight', pad_inches=0)
+    plt.close()
+
+    #colorbar
+    fig, ax = plt.subplots()  # Adjust the aspect ratio
+    norm = plt.Normalize(vmin=conv_W1_channel_j.min(), vmax=conv_W1_channel_j.max())
+    cb = plt.colorbar(
+        plt.cm.ScalarMappable(norm=norm, cmap=cmaps_vec[j]),  # Use the 'Reds' colormap
+        cax=ax,
+        orientation='vertical'
+    )
+    cb.set_label('Value', fontsize=12)  # Add a label if desired
+    plt.savefig(out_conv_W1_dir + f"/colorbar_conv_W1channel{j}.svg")
+    plt.close()
+
+
+
+
+
 
 ###########################################################
 #plt F1
 cmaps_vec=["Reds","Oranges","Greens","Blues","Purples"]
 
 in_T1_file=inCoefDir+"/T1.pth"
-out_T1_dir=inCoefDir+"/T1Pics/"
+out_T1_dir=outCoefDir+"/T1Pics/"
 Path(out_T1_dir).mkdir(parents=True, exist_ok=True)
 T1=torch.load(in_T1_file)
 
@@ -172,7 +239,7 @@ for j in range(0,C_num_to_show):
 cmaps_vec=["Reds","Oranges","Greens","Blues","Purples"]
 
 in_S1_file=inCoefDir+"/S1.pth"
-out_S1_dir=inCoefDir+"/S1Pics/"
+out_S1_dir=outCoefDir+"/S1Pics/"
 Path(out_S1_dir).mkdir(parents=True, exist_ok=True)
 S1=torch.load(in_S1_file)
 
@@ -206,7 +273,7 @@ for j in range(0,C_num_to_show):
 cmaps_vec=["Reds","Oranges","Greens","Blues","Purples"]
 
 in_F2_file=inCoefDir+"/F2.pth"
-out_F2_dir=inCoefDir+"/F2Pics/"
+out_F2_dir=outCoefDir+"/F2Pics/"
 Path(out_F2_dir).mkdir(parents=True, exist_ok=True)
 F2=torch.load(in_F2_file)
 
@@ -240,7 +307,7 @@ for j in range(0,C_num_to_show):
 cmaps_vec=["Reds","Oranges","Greens","Blues","Purples"]
 
 in_T2_file=inCoefDir+"/T2.pth"
-out_T2_dir=inCoefDir+"/T2Pics/"
+out_T2_dir=outCoefDir+"/T2Pics/"
 Path(out_T2_dir).mkdir(parents=True, exist_ok=True)
 T2=torch.load(in_T2_file)
 
@@ -276,7 +343,7 @@ for j in range(0,C_num_to_show):
 cmaps_vec=["Reds","Oranges","Greens","Blues","Purples"]
 
 in_S2_file=inCoefDir+"/S2.pth"
-out_S2_dir=inCoefDir+"/S2Pics/"
+out_S2_dir=outCoefDir+"/S2Pics/"
 Path(out_S2_dir).mkdir(parents=True, exist_ok=True)
 S2=torch.load(in_S2_file)
 

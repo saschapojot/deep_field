@@ -66,7 +66,7 @@ class toFile_Phi0Layer(nn.Module):
             bias=False
         )
 
-    def forward(self, x,save_path=None):
+    def forward(self, x,save_path_convW0_convW1=None):
         """
         Forward pass for the Phi0Layer.
 
@@ -82,7 +82,12 @@ class toFile_Phi0Layer(nn.Module):
         # Apply shared W0 and W1 convolutions to each channel
         conv_W0_outputs = [self.shared_conv_W0(channel) for channel in x_channels]
         conv_W1_outputs = [self.shared_conv_W1(channel) for channel in x_channels]
+        Path(save_path_convW0_convW1).mkdir(parents=True, exist_ok=True)
+        conv_W0_file=save_path_convW0_convW1+"/conv_W0.pth"
+        torch.save(conv_W0_outputs, conv_W0_file)
 
+        conv_W1_file=save_path_convW0_convW1+"/conv_W1.pth"
+        torch.save(conv_W1_outputs, conv_W1_file)
         # Perform element-wise multiplication for each channel
         multiplied_outputs = [
             conv_W0 * conv_W1 for conv_W0, conv_W1 in zip(conv_W0_outputs, conv_W1_outputs)
@@ -90,9 +95,7 @@ class toFile_Phi0Layer(nn.Module):
 
         # Sum over the 3 input channels
         Phi0 = sum(multiplied_outputs)  # Shape: (batch_size, out_channels, N, N)
-        if save_path:
-            torch.save(Phi0, save_path)
-            print(f"Phi0 saved to {save_path}")
+
 
         return Phi0
 
@@ -310,7 +313,8 @@ class toFile_dsnn_qt(nn.Module):
             torch.Tensor: The tensor S1.
         """
         # Step 1: Compute F1 from Phi0Layer and NonlinearLayer
-        phi0_output = self.phi0_layer(x)
+
+        phi0_output = self.phi0_layer(x,outDir)
         out_Phi0File=outDir+"/Phi0.pth"
 
         torch.save(phi0_output, out_Phi0File)
