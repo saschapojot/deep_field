@@ -121,9 +121,8 @@ B = list(combinations(range(L), r))
 # print(B[0])
 # print(B[134])
 K=len(B)
-decrease_over=100
-decrease_rate=0.98
-
+decrease_over=50
+decrease_rate=0.9
 # num_layers = 5  # Number of DSNN layers
 num_neurons = int(L*1.2)  # Number of neurons per layer
 batch_size = 1000
