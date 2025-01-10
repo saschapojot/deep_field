@@ -125,7 +125,8 @@ model = dsnn_qt(
     nonlinear_conv1_out_channels=C,
     nonlinear_conv2_out_channels=C,
     final_out_channels=1,
-    filter_size=filter_size
+    filter_size=filter_size,
+stepsAfterInit=step_num_after_S1
 ).to(device)
 
 # Optimizer, scheduler, and loss function
@@ -149,7 +150,7 @@ for epoch in range(num_epochs):
         S1 = model.initialize_S1(X_batch)
 
         # Forward pass
-        predictions = model(X_batch, S1, steps=step_num_after_S1)
+        predictions = model(X_batch, S1)
 
         # Compute loss
         loss = criterion(predictions, Y_batch)
