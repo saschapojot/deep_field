@@ -19,7 +19,7 @@ step_num_after_S1=int(sys.argv[4])
 lin_increase_factor=float(sys.argv[5])
 
 N=int(sys.argv[6])
-C=15
+C=10
 inDir=f"./train_test_data/N{N}/"
 num_samples_in=200000
 in_pkl_train_file=inDir+f"/db.train_num_samples{num_samples_in}.pkl"
