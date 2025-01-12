@@ -73,7 +73,8 @@ for epoch in range(num_epochs):
     epoch_loss = 0  # Reset epoch loss
     for X_batch, Y_batch in train_loader:
         X_batch, Y_batch = X_batch.to(device), Y_batch.to(device)  # Move batch to device
-
+        Y_batch = Y_batch.unsqueeze(1)
+        # print(f"Y_batch.shape={Y_batch.shape}")
         # Initialize S1 for the batch
         S1 = model.initialize_S1(X_batch)
         # Forward pass

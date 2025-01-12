@@ -326,14 +326,15 @@ class DSNN_qt(nn.Module):
         for j in range(0, self.stepsAfterInit):
             # Step 1: Compute F_{n+1} by passing S_n through Nonlinear_layer_without_conv
             Fn_plus_1 = self.f_mapping_layers[j](Sn)
-            print(f"Fn_plus_1.shape={Fn_plus_1.shape}")
+            # print(f"Fn_plus_1.shape={Fn_plus_1.shape}")
             # Step 2: Pass input through TLayer and NonlinearLayer_with_conv
             T_output = self.T_layers_after_init[j](x)
             nonlinear_output = self.g_mapping_layers[j](T_output)
             # Step 3: Compute S_{n+1} as pointwise multiplication of Fn_plus_1 and nonlinear_output
             Sn = Fn_plus_1 * nonlinear_output
-            print(f"Sn.shape={Sn.shape}")
+            # print(f"Sn.shape={Sn.shape}")
         E = Sn.sum(dim=1, keepdim=True)  # Sum over all elements for each sample
+        # print(f"E.shape={E.shape}")
         return E
 
 
