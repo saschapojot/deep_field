@@ -93,6 +93,7 @@ stepsAfterInit=step_num_after_S1
 model.load_state_dict(checkpoint['model_state_dict'])
 model.to(device)  # Move model to device
 
+
 Path(outCoefDir).mkdir(parents=True, exist_ok=True)
 
 which_data=768
@@ -102,7 +103,9 @@ S1 = model.initialize_S1(single_sample_input)
 # Pass through the model
 with torch.no_grad():  # No need for gradients during inference
     prediction = model(single_sample_input, S1)
-
+out_S0_file=outCoefDir+"/S0.pth"
+torch.save(single_sample_input, out_S0_file)
+print(f"S0 saved to {out_S0_file}")
 # Print results
 # print(f"Input: {single_sample_input}")
 print(f"True Target: {single_sample_target.item()}")

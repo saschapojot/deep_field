@@ -46,7 +46,7 @@ decrease_over = 50
 decrease_rate = 0.9
 
 
-num_epochs = 1000
+num_epochs = 100
 
 decrease_overStr=format_using_decimal(decrease_over)
 decrease_rateStr=format_using_decimal(decrease_rate)
@@ -76,7 +76,8 @@ test_dataset = CustomDataset(X_test_tensor, Y_test_tensor)
 test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False)  # Batch size can be adjusted
 
 # Load the trained model
-checkpoint = torch.load(in_model_file)
+checkpoint = torch.load(in_model_file, map_location=device)
+
 model = dsnn_qt(
     input_channels=3,
     phi0_out_channels=C,
@@ -88,7 +89,8 @@ model = dsnn_qt(
 stepsAfterInit=step_num_after_S1
 ).to(device)
 
-model.load_state_dict(checkpoint['model_state_dict'])  # Load saved weights
+# model.load_state_dict(torch.load(in_model_file, map_location=device))  # Load saved weights
+model.load_state_dict(checkpoint['model_state_dict'])
 model.to(device)  # Move model to device
 
 # Evaluate the model
@@ -102,3 +104,17 @@ out_content=f"MSE_loss={format_using_decimal(test_loss)}, std_loss={format_using
 
 with open(outTxtFile,"w+") as fptr:
     fptr.write(out_content)
+
+
+# which_data=2
+# single_sample_input = torch.tensor(X_test_array[which_data], dtype=torch.float).unsqueeze(0).to(device)  # Add batch dimension
+# single_sample_target = torch.tensor(Y_test_array[which_data], dtype=torch.float).unsqueeze(0).to(device)  # Add batch dimension
+# S1 = model.initialize_S1(single_sample_input)
+# # Pass through the model
+# with torch.no_grad():  # No need for gradients during inference
+#     prediction = model(single_sample_input, S1)
+#
+# # Print results
+# # print(f"Input: {single_sample_input}")
+# print(f"True Target: {single_sample_target.item()}")
+# print(f"Prediction: {prediction.item()}")
