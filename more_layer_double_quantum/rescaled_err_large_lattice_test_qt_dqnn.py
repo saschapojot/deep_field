@@ -53,7 +53,7 @@ def evaluate_model(N,beta,delta,model, test_loader, device):
     all_predictions = torch.cat(all_predictions, dim=0)
     return average_loss,all_predictions,custom_metric_sum#,custom_metric_sum_another
 N_for_model=10
-N=40
+N=35
 C=10
 beta=2.000118007266001
 delta=1.9153971526235198

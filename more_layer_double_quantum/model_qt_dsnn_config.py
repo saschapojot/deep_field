@@ -26,7 +26,7 @@ T=0.1*t
 
 
 
-save_interval=10
+save_interval=25
 filter_size=5
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # decrease_over = 50
