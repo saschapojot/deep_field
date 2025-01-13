@@ -24,9 +24,9 @@ mu=-8.3*t
 T=0.1*t
 
 
-C=25
 
 
+save_interval=10
 filter_size=5
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # decrease_over = 50
@@ -323,14 +323,16 @@ class dsnn_qt(nn.Module):
         # Step 1: Compute F1 from Phi0Layer and NonlinearLayer
         phi0_output = self.phi0_layer(x)
         F1 = self.nonlinear_layer_Phi0_2_F1(phi0_output)
+        # print(f"F1.shape={F1.shape}")
 
         # Step 2: Pass input through TLayer and NonlinearLayer
         T_output = self.T1_layer(x)
+        # print(f"T_output.shape={T_output.shape}")
         nonlinear_output = self.nonlinear_layer_T1_2_S1(T_output)
 
         # Step 3: Compute S1 as pointwise multiplication of F1 and nonlinear_output
         S1 = F1 * nonlinear_output
-
+        # print(f"S1.shape={S1.shape}")
         return S1
 
     def forward(self, x, Sn):
@@ -355,6 +357,7 @@ class dsnn_qt(nn.Module):
 
             # Step 3: Compute S_{n+1} as pointwise multiplication of Fn_plus_1 and nonlinear_output
             Sn = Fn_plus_1 * nonlinear_output
+            # print(f"Sn.shape={Sn.shape}")
 
         # Step 4: Map the final S_{n+1} to N x N matrix
         final_output = self.final_mapping_layer(Sn)

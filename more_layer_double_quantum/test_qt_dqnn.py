@@ -37,7 +37,7 @@ def evaluate_model(model, test_loader, device):
     return average_loss
 
 N=10
-C=15
+C=25
 #layer
 step_num_after_S1=2
 
@@ -70,7 +70,7 @@ X_test_tensor=torch.tensor(X_test_array,dtype=torch.float)
 
 Y_test_tensor=torch.tensor(Y_test_array,dtype=torch.float)
 
-batch_size = 2000  # Define batch size
+batch_size = 1000  # Define batch size
 # Create test dataset and DataLoader
 test_dataset = CustomDataset(X_test_tensor, Y_test_tensor)
 test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False)  # Batch size can be adjusted

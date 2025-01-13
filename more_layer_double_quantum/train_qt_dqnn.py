@@ -133,7 +133,10 @@ stepsAfterInit=step_num_after_S1
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
 scheduler = StepLR(optimizer, step_size=decrease_over, gamma=decrease_rate)
 criterion = nn.MSELoss()
-
+out_model_dir=f"./out_model_data/N{N}/C{C}/layer{step_num_after_S1}/"
+Path(out_model_dir).mkdir(exist_ok=True,parents=True)
+decrease_overStr=format_using_decimal(decrease_over)
+decrease_rateStr=format_using_decimal(decrease_rate)
 tStart=datetime.now()
 # To log loss values for each epoch
 loss_file_content = []
@@ -176,12 +179,22 @@ for epoch in range(num_epochs):
     # Optionally log the current learning rate
     current_lr = scheduler.get_last_lr()[0]
     print(f"Learning Rate after Epoch {epoch + 1}: {current_lr:.8e}")
-
-
-out_model_dir=f"./out_model_data/N{N}/C{C}/layer{step_num_after_S1}/"
-Path(out_model_dir).mkdir(exist_ok=True,parents=True)
-decrease_overStr=format_using_decimal(decrease_over)
-decrease_rateStr=format_using_decimal(decrease_rate)
+    if (epoch + 1) % save_interval == 0:
+        save_suffix = f"_over{decrease_overStr}_rate{decrease_rateStr}_epoch{epoch + 1}_num_samples{num_samples_in}"
+        save_path = out_model_dir + f"/dsnn_qt_trained{save_suffix}.pth"
+        checkpoint = {
+            'epoch': epoch + 1,
+            'model_state_dict': model.state_dict(),
+            'optimizer_state_dict': optimizer.state_dict(),
+            'scheduler_state_dict': scheduler.state_dict(),
+            'loss': average_loss,
+        }
+        torch.save(checkpoint, save_path)
+        print(f"Checkpoint saved at Epoch {epoch + 1} to {save_path}")
+# out_model_dir=f"./out_model_data/N{N}/C{C}/layer{step_num_after_S1}/"
+# Path(out_model_dir).mkdir(exist_ok=True,parents=True)
+# decrease_overStr=format_using_decimal(decrease_over)
+# decrease_rateStr=format_using_decimal(decrease_rate)
 
 suffix_str=f"_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}_num_samples{num_samples_in}"
 # Save training log to file
