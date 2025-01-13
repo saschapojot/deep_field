@@ -37,16 +37,16 @@ def evaluate_model(model, test_loader, device):
     return average_loss
 
 N=10
-C=15
+C=25
 #layer
-step_num_after_S1=1
+step_num_after_S1=2
 
 decrease_over = 50
 
 decrease_rate = 0.9
 
 
-num_epochs = 100
+num_epochs = 50
 
 decrease_overStr=format_using_decimal(decrease_over)
 decrease_rateStr=format_using_decimal(decrease_rate)
