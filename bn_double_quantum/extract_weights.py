@@ -95,7 +95,7 @@ model.to(device)  # Move model to device
 
 Path(outCoefDir).mkdir(parents=True, exist_ok=True)
 
-which_data=187
+which_data=768
 single_sample_input = torch.tensor(X_test_array[which_data], dtype=torch.float).unsqueeze(0).to(device)  # Add batch dimension
 single_sample_target = torch.tensor(Y_test_array[which_data], dtype=torch.float).unsqueeze(0).to(device)  # Add batch dimension
 S1 = model.initialize_S1(single_sample_input)
