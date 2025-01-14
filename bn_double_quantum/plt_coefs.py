@@ -17,10 +17,11 @@ S0_y=np.array(S0[0,1,:,:])
 S0_z=np.array(S0[0,2,:,:])
 out_S0_dir=inCoefDir+"/S0Pics/"
 Path(out_S0_dir).mkdir(parents=True, exist_ok=True)
+cmaps_vec=['YlOrRd','YlGn','PuBu']# for S0
 ###########################################################
 #plot S0_x
 plt.figure(figsize=(width, height))
-plt.imshow(S0_x,cmap='gray', interpolation='nearest')
+plt.imshow(S0_x,cmap=cmaps_vec[0], interpolation='nearest')
 # Remove x and y ticks
 plt.axis('off')  # Turn off the axes
 plt.tight_layout()
@@ -30,7 +31,7 @@ plt.close()
 fig, ax = plt.subplots()  # Adjust the aspect ratio
 norm = plt.Normalize(vmin=S0_x.min(), vmax=S0_x.max())
 cb = plt.colorbar(
-        plt.cm.ScalarMappable(norm=norm, cmap='gray'),  # Use the 'Reds' colormap
+        plt.cm.ScalarMappable(norm=norm, cmap=cmaps_vec[0]),  # Use the 'Reds' colormap
         cax=ax,
         orientation='vertical'
     )
@@ -41,7 +42,7 @@ plt.close()
 
 #plot S0_y
 plt.figure(figsize=(width, height))
-plt.imshow(S0_y,cmap='gray', interpolation='nearest')
+plt.imshow(S0_y,cmap=cmaps_vec[1], interpolation='nearest')
 # Remove x and y ticks
 plt.axis('off')  # Turn off the axes
 plt.tight_layout()
@@ -51,7 +52,7 @@ plt.close()
 fig, ax = plt.subplots()  # Adjust the aspect ratio
 norm = plt.Normalize(vmin=S0_y.min(), vmax=S0_y.max())
 cb = plt.colorbar(
-        plt.cm.ScalarMappable(norm=norm, cmap='gray'),  # Use the 'Reds' colormap
+        plt.cm.ScalarMappable(norm=norm, cmap=cmaps_vec[1]),  # Use the 'Reds' colormap
         cax=ax,
         orientation='vertical'
     )
@@ -62,7 +63,7 @@ plt.close()
 
 #plot S0_z
 plt.figure(figsize=(width, height))
-plt.imshow(S0_z,cmap='gray', interpolation='nearest')
+plt.imshow(S0_z,cmap=cmaps_vec[2], interpolation='nearest')
 # Remove x and y ticks
 plt.axis('off')  # Turn off the axes
 plt.tight_layout()
@@ -72,7 +73,7 @@ plt.close()
 fig, ax = plt.subplots()  # Adjust the aspect ratio
 norm = plt.Normalize(vmin=S0_z.min(), vmax=S0_z.max())
 cb = plt.colorbar(
-        plt.cm.ScalarMappable(norm=norm, cmap='gray'),  # Use the 'Reds' colormap
+        plt.cm.ScalarMappable(norm=norm, cmap=cmaps_vec[2]),  # Use the 'Reds' colormap
         cax=ax,
         orientation='vertical'
     )
@@ -123,6 +124,48 @@ for j in range(0,C_num_to_show):
     plt.close()
 
 
+###########################################################
+
+###########################################################
+#plot g1
+
+cmaps_vec=["Reds","Oranges","Greens","Blues","Purples"]
+in_g1_file=inCoefDir+"/g1.pth"
+out_g1_dir=inCoefDir+"/g1Pics/"
+Path(out_g1_dir).mkdir(parents=True, exist_ok=True)
+g1=torch.load(in_g1_file)
+C_num_to_show=5
+print(f"g1.shape={g1.shape}")
+g1_to_plt=g1[0,0:C_num_to_show,:,:].detach().cpu().numpy()
+
+##plot g1, channel0
+# g1_channel0=g1_to_plt[0,:,:]
+# plt.figure(figsize=(width, height))
+# plt.imshow(g1_channel0, cmap=cmaps_vec[0], interpolation='nearest')  # Use the Reds colormap
+# plt.axis('off')  # Turn off the axes
+# plt.tight_layout()
+# plt.savefig(out_g1_dir+"/g1_channel0.svg",format="svg", bbox_inches='tight', pad_inches=0)
+# plt.close()
+for j in range(0,C_num_to_show):
+    plt.figure(figsize=(width, height))
+    g1_channel_j=g1_to_plt[j,:,:]
+    plt.imshow(g1_channel_j,cmap=cmaps_vec[j],interpolation='nearest')
+    plt.axis('off')
+    plt.tight_layout()
+    plt.savefig(out_g1_dir + f"/g1_channel{j}.svg", format="svg", bbox_inches='tight', pad_inches=0)
+    plt.close()
+
+    #colorbar
+    fig, ax = plt.subplots()  # Adjust the aspect ratio
+    norm = plt.Normalize(vmin=g1_channel_j.min(), vmax=g1_channel_j.max())
+    cb = plt.colorbar(
+        plt.cm.ScalarMappable(norm=norm, cmap=cmaps_vec[j]),  # Use the 'Reds' colormap
+        cax=ax,
+        orientation='vertical'
+    )
+    cb.set_label('Value', fontsize=12)  # Add a label if desired
+    plt.savefig(out_g1_dir+f"/colorbar_g1_channel{j}.svg")
+    plt.close()
 ###########################################################
 #plot F1
 cmaps_vec=["Reds","Oranges","Greens","Blues","Purples"]
