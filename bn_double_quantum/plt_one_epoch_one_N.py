@@ -15,7 +15,7 @@ mpl.rcParams['axes.linewidth'] = 2.5  # Set for all plots
 decrease_over = 50
 decrease_rate = 0.9
 step_num_after_S1_vec=[0,1,2]
-C_vec=[10,15,20,25,30]
+C_vec=[10,15,20,25]
 
 
 decrease_overStr=format_using_decimal(decrease_over)
@@ -69,7 +69,7 @@ Y_train_avg=np.mean(Y_train_array)
 abs_Y_train_avg=np.abs(Y_train_avg)
 
 print(f"Y_train_array.shape={Y_train_array.shape}")
-set_epoch=300
+set_epoch=25
 
 layer0=step_num_after_S1_vec[0]
 std_for_layer0=std_loss_all_one_epoch(set_epoch,layer0,N,C_vec)
@@ -84,7 +84,8 @@ std_for_layer2=std_loss_all_one_epoch(set_epoch,layer2,N,C_vec)
 relative_acc_layer0=std_for_layer0/abs_Y_train_avg
 relative_acc_layer1=std_for_layer1/abs_Y_train_avg
 relative_acc_layer2=std_for_layer2/abs_Y_train_avg
-out_pic_dir="./compare/"
+print(f"set_epoch={set_epoch}, relative_acc_layer2={relative_acc_layer2}")
+out_pic_dir="../fig_qt/"
 Path(out_pic_dir).mkdir(parents=True, exist_ok=True)
 width=6
 height=8
@@ -111,12 +112,16 @@ lin_mean_mse=0.9847254886017068
 lin_mean_std=np.sqrt(lin_mean_mse)
 lin_err_relative=lin_mean_std/abs_Y_train_avg
 
-print(f"lin_err_relative={lin_err_relative}")
+# print(f"lin_err_relative={lin_err_relative}")
 plt.axhline(y=lin_err_relative, color="black", linestyle="--", label=f"Effective model",linewidth=lineWidth1)
 plt.xlabel("Channel number",fontsize=textSize)
 plt.ylabel("Relative error",fontsize=textSize)
+
+plt.yticks([0.008,0.01,0.02],labels=[r"0.008", "0.01", "0.02"],fontsize=yTickSize)
+plt.xticks([10,15,20,25],["10","15","20","25"],fontsize=xTickSize)
+
 plt.gca().yaxis.set_label_position("right")  # Move label to the right
 plt.legend(loc="upper right", bbox_to_anchor=(0.9, 0.8), fontsize=legend_fontsize)
-plt.title(f"epoch={set_epoch}")
+# plt.title(f"epoch={set_epoch}")
 plt.tight_layout()
 plt.savefig(out_pic_dir+f"epoch_{set_epoch}_N{N}.svg")
