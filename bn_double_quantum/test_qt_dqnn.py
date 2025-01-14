@@ -37,16 +37,16 @@ def evaluate_model(model, test_loader, device):
     return average_loss
 
 N=10
-C=25
+C=10
 #layer
-step_num_after_S1=2
+step_num_after_S1=1
 
 decrease_over = 50
 
 decrease_rate = 0.9
 
 
-num_epochs = 50
+num_epochs = 25#optimal is 25
 
 decrease_overStr=format_using_decimal(decrease_over)
 decrease_rateStr=format_using_decimal(decrease_rate)
@@ -89,11 +89,11 @@ model = dsnn_qt(
 stepsAfterInit=step_num_after_S1
 ).to(device)
 
-# model.load_state_dict(torch.load(in_model_file, map_location=device))  # Load saved weights
+
 model.load_state_dict(checkpoint['model_state_dict'])
 model.to(device)  # Move model to device
-
-# Evaluate the model
+#
+# # Evaluate the model
 test_loss = evaluate_model(model, test_loader, device)
 std_loss=np.sqrt(test_loss)
 print(f"Test Loss (MSE): {test_loss:.6f}")
@@ -106,7 +106,7 @@ with open(outTxtFile,"w+") as fptr:
     fptr.write(out_content)
 
 
-# which_data=2
+# which_data=500
 # single_sample_input = torch.tensor(X_test_array[which_data], dtype=torch.float).unsqueeze(0).to(device)  # Add batch dimension
 # single_sample_target = torch.tensor(Y_test_array[which_data], dtype=torch.float).unsqueeze(0).to(device)  # Add batch dimension
 # S1 = model.initialize_S1(single_sample_input)
