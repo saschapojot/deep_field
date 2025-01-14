@@ -117,7 +117,7 @@ plt.axhline(y=lin_err_relative, color="black", linestyle="--", label=f"Effective
 plt.xlabel("Channel number",fontsize=textSize)
 plt.ylabel("Relative error",fontsize=textSize)
 
-plt.yticks([0.008,0.01,0.02],labels=[r"0.008", "0.01", "0.02"],fontsize=yTickSize)
+plt.yticks([0.009,0.01,0.02],labels=[r"0.009", "0.01", "0.02"],fontsize=yTickSize)
 plt.xticks([10,15,20,25],["10","15","20","25"],fontsize=xTickSize)
 
 plt.gca().yaxis.set_label_position("right")  # Move label to the right
