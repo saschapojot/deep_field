@@ -92,29 +92,34 @@ stepsAfterInit=step_num_after_S1
 
 model.load_state_dict(checkpoint['model_state_dict'])
 model.to(device)  # Move model to device
-#
+###############################################################
 # # Evaluate the model
-test_loss = evaluate_model(model, test_loader, device)
-std_loss=np.sqrt(test_loss)
-print(f"Test Loss (MSE): {test_loss:.6f}")
-
-outTxtFile=in_model_dir+f"/test_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}_num_samples200000.txt"
-
-out_content=f"MSE_loss={format_using_decimal(test_loss)}, std_loss={format_using_decimal(std_loss)}  N={N}, C={C}, layer={step_num_after_S1}, decrease_over={decrease_overStr}, decrease_rate={decrease_rateStr}, num_epochs={num_epochs}"
-
-with open(outTxtFile,"w+") as fptr:
-    fptr.write(out_content)
-
-
-# which_data=500
-# single_sample_input = torch.tensor(X_test_array[which_data], dtype=torch.float).unsqueeze(0).to(device)  # Add batch dimension
-# single_sample_target = torch.tensor(Y_test_array[which_data], dtype=torch.float).unsqueeze(0).to(device)  # Add batch dimension
-# S1 = model.initialize_S1(single_sample_input)
-# # Pass through the model
-# with torch.no_grad():  # No need for gradients during inference
-#     prediction = model(single_sample_input, S1)
+# test_loss = evaluate_model(model, test_loader, device)
+# std_loss=np.sqrt(test_loss)
+# print(f"Test Loss (MSE): {test_loss:.6f}")
 #
-# # Print results
-# # print(f"Input: {single_sample_input}")
-# print(f"True Target: {single_sample_target.item()}")
-# print(f"Prediction: {prediction.item()}")
+# outTxtFile=in_model_dir+f"/test_over{decrease_overStr}_rate{decrease_rateStr}_epoch{num_epochs}_num_samples200000.txt"
+#
+# out_content=f"MSE_loss={format_using_decimal(test_loss)}, std_loss={format_using_decimal(std_loss)}  N={N}, C={C}, layer={step_num_after_S1}, decrease_over={decrease_overStr}, decrease_rate={decrease_rateStr}, num_epochs={num_epochs}"
+#
+# with open(outTxtFile,"w+") as fptr:
+#     fptr.write(out_content)
+###############################################################
+
+###############################################################
+# single point evaluation, for visualization of layers
+which_data=576
+single_sample_input = torch.tensor(X_test_array[which_data], dtype=torch.float).unsqueeze(0).to(device)  # Add batch dimension
+single_sample_target = torch.tensor(Y_test_array[which_data], dtype=torch.float).unsqueeze(0).to(device)  # Add batch dimension
+torch.save(single_sample_input,outCoefDir+f"/S0.pth")
+S1 = model.initialize_S1(single_sample_input)
+# Pass through the model
+with torch.no_grad():  # No need for gradients during inference
+    prediction = model(single_sample_input, S1)
+
+# Print results
+# print(f"Input: {single_sample_input}")
+print(f"True Target: {single_sample_target.item()}")
+print(f"Prediction: {prediction.item()}")
+
+###############################################################
