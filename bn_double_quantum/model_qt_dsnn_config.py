@@ -220,7 +220,7 @@ class dsnn_qt(nn.Module):
             TLayer(out_channels=T_out_channels, kernel_size=filter_size, padding=paddingNum) for _ in
             range(0, stepsAfterInit)
         ])
-        print(f"len(T_layers_after_init)={len(self.T_layers_after_init)}")
+        # print(f"len(T_layers_after_init)={len(self.T_layers_after_init)}")
         # NonlinearLayer for Phi0and F1
         self.nonlinear_layer_Phi0_2_F1 = NonlinearLayer(
             in_channels=nonlinear_conv2_out_channels,
@@ -241,7 +241,7 @@ class dsnn_qt(nn.Module):
             )
             for _ in range(0, stepsAfterInit)
         ])
-        print(f"len(f_mapping_layers)={len(self.f_mapping_layers)}")
+        # print(f"len(f_mapping_layers)={len(self.f_mapping_layers)}")
         # NonlinearLayer for T1 and S1
         self.nonlinear_layer_T1_2_S1 = NonlinearLayer(
             in_channels=T_out_channels,
@@ -263,7 +263,7 @@ class dsnn_qt(nn.Module):
             for _ in range(0, stepsAfterInit)
         ])
 
-        print(f"len(g_mapping_layers)={len(self.g_mapping_layers)}")
+        # print(f"len(g_mapping_layers)={len(self.g_mapping_layers)}")
         # Final mapping layer to N x N matrix
         self.final_mapping_layer = NonlinearLayer(
             in_channels=nonlinear_conv2_out_channels,
@@ -276,7 +276,7 @@ class dsnn_qt(nn.Module):
     def initialize_S1(self, x):
         # Step 1: Compute F1 from Phi0Layer and NonlinearLayer
         phi0_output = self.phi0_layer(x)
-        out_Phi0File = outCoefDir + "/Phi0.pth"
+        # out_Phi0File = outCoefDir + "/Phi0.pth"
         # torch.save(phi0_output, out_Phi0File)
         # print(f"Phi0 saved to {out_Phi0File}")
 
@@ -286,6 +286,7 @@ class dsnn_qt(nn.Module):
         # torch.save(F1, out_F1File)
         # print("F1 saved to {}".format(out_F1File))
         # print(f"F1.shape={F1.shape}")
+
         # Step 2: Pass input through TLayer and NonlinearLayer
 
         T_output = self.T1_layer(x)
