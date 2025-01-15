@@ -16,7 +16,7 @@ C=10
 rate=0.9
 N_vec=np.array([10,15,20,25,30,35,40])
 num_suffix=40000
-num_epochs = 25
+num_epochs = 25#optimal is 25
 inDirRoot="./larger_lattice_test_performance/"
 
 def N_2_test_file(N):
@@ -120,7 +120,7 @@ xTickSize=33
 legend_fontsize=33
 lineWidth1=3
 marker_size1=100
-out_db_qt_dir="./larger_lattice_test_performance/"
+out_db_qt_dir="../fig_qt/"
 Path(out_db_qt_dir).mkdir(parents=True, exist_ok=True)
 plt.figure(figsize=(width, height))
 

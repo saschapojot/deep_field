@@ -55,21 +55,21 @@ def evaluate_model(N,model, test_loader, device):
     all_predictions = torch.cat(all_predictions, dim=0)
     return average_loss,all_predictions#,custom_metric_sum,custom_metric_sum_another
 N_for_model=10
-N=40
+N=10
 C=10
 # beta=1.9999403561992048
 # delta=2.026271899527667
 # c_true=-0.0014459645634784324
 # c_pred=-2.8370278369596145
 #layer
-step_num_after_S1=1
+step_num_after_S1=0
 
 decrease_over = 50
 
 decrease_rate = 0.9
 
 
-num_epochs =1000
+num_epochs =25#optimal is 25
 
 decrease_overStr=format_using_decimal(decrease_over)
 decrease_rateStr=format_using_decimal(decrease_rate)

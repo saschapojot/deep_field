@@ -42,9 +42,9 @@ def evaluate_model(model, test_loader, device):
 
 
 N=10
-C=10
+C=30
 #layer
-step_num_after_S1=0
+step_num_after_S1=2
 
 decrease_over = 50
 

@@ -407,118 +407,150 @@ for j in range(0,C_num_to_show):
 
 ###########################################################
 #plot F3
-in_F3_file=inCoefDir+"/F3.pth"
-out_F3_dir=inCoefDir+"/F3Pics/"
-Path(out_F3_dir).mkdir(parents=True, exist_ok=True)
-F3=torch.load(in_F3_file)
-C_num_to_show=5
-print(f"F3.shape={F3.shape}")
-F3_to_plt=F3[0,0:C_num_to_show,:,:].detach().cpu().numpy()
-
-##plot F3, channel0
-# F3_channel0=F3_to_plt[0,:,:]
-# plt.figure(figsize=(width, height))
-# plt.imshow(F3_channel0, cmap=cmaps_vec[0], interpolation='nearest')  # Use the Reds colormap
-# plt.axis('off')  # Turn off the axes
-# plt.tight_layout()
-# plt.savefig(out_F3_dir+"/F3_channel0.svg",format="svg", bbox_inches='tight', pad_inches=0)
-# plt.close()
-for j in range(0,C_num_to_show):
-    plt.figure(figsize=(width, height))
-    F3_channel_j=F3_to_plt[j,:,:]
-    plt.imshow(F3_channel_j,cmap=cmaps_vec[j],interpolation='nearest')
-    plt.axis('off')
-    plt.tight_layout()
-    plt.savefig(out_F3_dir + f"/F3_channel{j}.svg", format="svg", bbox_inches='tight', pad_inches=0)
-    plt.close()
-
-    #colorbar
-    fig, ax = plt.subplots()  # Adjust the aspect ratio
-    norm = plt.Normalize(vmin=F3_channel_j.min(), vmax=F3_channel_j.max())
-    cb = plt.colorbar(
-        plt.cm.ScalarMappable(norm=norm, cmap=cmaps_vec[j]),  # Use the 'Reds' colormap
-        cax=ax,
-        orientation='vertical'
-    )
-    cb.set_label('Value', fontsize=12)  # Add a label if desired
-    plt.savefig(out_F3_dir+f"/colorbar_F3_channel{j}.svg")
-    plt.close()
+# in_F3_file=inCoefDir+"/F3.pth"
+# out_F3_dir=inCoefDir+"/F3Pics/"
+# Path(out_F3_dir).mkdir(parents=True, exist_ok=True)
+# F3=torch.load(in_F3_file)
+# C_num_to_show=5
+# print(f"F3.shape={F3.shape}")
+# F3_to_plt=F3[0,0:C_num_to_show,:,:].detach().cpu().numpy()
+#
+# ##plot F3, channel0
+# # F3_channel0=F3_to_plt[0,:,:]
+# # plt.figure(figsize=(width, height))
+# # plt.imshow(F3_channel0, cmap=cmaps_vec[0], interpolation='nearest')  # Use the Reds colormap
+# # plt.axis('off')  # Turn off the axes
+# # plt.tight_layout()
+# # plt.savefig(out_F3_dir+"/F3_channel0.svg",format="svg", bbox_inches='tight', pad_inches=0)
+# # plt.close()
+# for j in range(0,C_num_to_show):
+#     plt.figure(figsize=(width, height))
+#     F3_channel_j=F3_to_plt[j,:,:]
+#     plt.imshow(F3_channel_j,cmap=cmaps_vec[j],interpolation='nearest')
+#     plt.axis('off')
+#     plt.tight_layout()
+#     plt.savefig(out_F3_dir + f"/F3_channel{j}.svg", format="svg", bbox_inches='tight', pad_inches=0)
+#     plt.close()
+#
+#     #colorbar
+#     fig, ax = plt.subplots()  # Adjust the aspect ratio
+#     norm = plt.Normalize(vmin=F3_channel_j.min(), vmax=F3_channel_j.max())
+#     cb = plt.colorbar(
+#         plt.cm.ScalarMappable(norm=norm, cmap=cmaps_vec[j]),  # Use the 'Reds' colormap
+#         cax=ax,
+#         orientation='vertical'
+#     )
+#     cb.set_label('Value', fontsize=12)  # Add a label if desired
+#     plt.savefig(out_F3_dir+f"/colorbar_F3_channel{j}.svg")
+#     plt.close()
 
 
 ###########################################################
 #plot T3
-in_T3_file=inCoefDir+"/T3.pth"
-out_T3_dir=inCoefDir+"/T3Pics/"
-Path(out_T3_dir).mkdir(parents=True, exist_ok=True)
-T3=torch.load(in_T3_file)
-C_num_to_show=5
-print(f"T3.shape={T3.shape}")
-T3_to_plt=T3[0,0:C_num_to_show,:,:].detach().cpu().numpy()
-
-##plot T3, channel0
-# T3_channel0=T3_to_plt[0,:,:]
-# plt.figure(figsize=(width, height))
-# plt.imshow(T3_channel0, cmap=cmaps_vec[0], interpolation='nearest')  # Use the Reds colormap
-# plt.axis('off')  # Turn off the axes
-# plt.tight_layout()
-# plt.savefig(out_T3_dir+"/T3_channel0.svg",format="svg", bbox_inches='tight', pad_inches=0)
-# plt.close()
-for j in range(0,C_num_to_show):
-    plt.figure(figsize=(width, height))
-    T3_channel_j=T3_to_plt[j,:,:]
-    plt.imshow(T3_channel_j,cmap=cmaps_vec[j],interpolation='nearest')
-    plt.axis('off')
-    plt.tight_layout()
-    plt.savefig(out_T3_dir + f"/T3_channel{j}.svg", format="svg", bbox_inches='tight', pad_inches=0)
-    plt.close()
-
-    #colorbar
-    fig, ax = plt.subplots()  # Adjust the aspect ratio
-    norm = plt.Normalize(vmin=T3_channel_j.min(), vmax=T3_channel_j.max())
-    cb = plt.colorbar(
-        plt.cm.ScalarMappable(norm=norm, cmap=cmaps_vec[j]),  # Use the 'Reds' colormap
-        cax=ax,
-        orientation='vertical'
-    )
-    cb.set_label('Value', fontsize=12)  # Add a label if desired
-    plt.savefig(out_T3_dir+f"/colorbar_T3_channel{j}.svg")
-    plt.close()
+# in_T3_file=inCoefDir+"/T3.pth"
+# out_T3_dir=inCoefDir+"/T3Pics/"
+# Path(out_T3_dir).mkdir(parents=True, exist_ok=True)
+# T3=torch.load(in_T3_file)
+# C_num_to_show=5
+# print(f"T3.shape={T3.shape}")
+# T3_to_plt=T3[0,0:C_num_to_show,:,:].detach().cpu().numpy()
+#
+# ##plot T3, channel0
+# # T3_channel0=T3_to_plt[0,:,:]
+# # plt.figure(figsize=(width, height))
+# # plt.imshow(T3_channel0, cmap=cmaps_vec[0], interpolation='nearest')  # Use the Reds colormap
+# # plt.axis('off')  # Turn off the axes
+# # plt.tight_layout()
+# # plt.savefig(out_T3_dir+"/T3_channel0.svg",format="svg", bbox_inches='tight', pad_inches=0)
+# # plt.close()
+# for j in range(0,C_num_to_show):
+#     plt.figure(figsize=(width, height))
+#     T3_channel_j=T3_to_plt[j,:,:]
+#     plt.imshow(T3_channel_j,cmap=cmaps_vec[j],interpolation='nearest')
+#     plt.axis('off')
+#     plt.tight_layout()
+#     plt.savefig(out_T3_dir + f"/T3_channel{j}.svg", format="svg", bbox_inches='tight', pad_inches=0)
+#     plt.close()
+#
+#     #colorbar
+#     fig, ax = plt.subplots()  # Adjust the aspect ratio
+#     norm = plt.Normalize(vmin=T3_channel_j.min(), vmax=T3_channel_j.max())
+#     cb = plt.colorbar(
+#         plt.cm.ScalarMappable(norm=norm, cmap=cmaps_vec[j]),  # Use the 'Reds' colormap
+#         cax=ax,
+#         orientation='vertical'
+#     )
+#     cb.set_label('Value', fontsize=12)  # Add a label if desired
+#     plt.savefig(out_T3_dir+f"/colorbar_T3_channel{j}.svg")
+#     plt.close()
 
 ###########################################################
 #plot S3
-in_S3_file=inCoefDir+"/S3.pth"
-out_S3_dir=inCoefDir+"/S3Pics/"
-Path(out_S3_dir).mkdir(parents=True, exist_ok=True)
-S3=torch.load(in_S3_file)
-C_num_to_show=5
-print(f"S3.shape={S3.shape}")
-S3_to_plt=S3[0,0:C_num_to_show,:,:].detach().cpu().numpy()
+# in_S3_file=inCoefDir+"/S3.pth"
+# out_S3_dir=inCoefDir+"/S3Pics/"
+# Path(out_S3_dir).mkdir(parents=True, exist_ok=True)
+# S3=torch.load(in_S3_file)
+# C_num_to_show=5
+# print(f"S3.shape={S3.shape}")
+# S3_to_plt=S3[0,0:C_num_to_show,:,:].detach().cpu().numpy()
+#
+# ##plot S3, channel0
+# # S3_channel0=S3_to_plt[0,:,:]
+# # plt.figure(figsize=(width, height))
+# # plt.imshow(S3_channel0, cmap=cmaps_vec[0], interpolation='nearest')  # Use the Reds colormap
+# # plt.axis('off')  # Turn off the axes
+# # plt.tight_layout()
+# # plt.savefig(out_S3_dir+"/S3_channel0.svg",format="svg", bbox_inches='tight', pad_inches=0)
+# # plt.close()
+# for j in range(0,C_num_to_show):
+#     plt.figure(figsize=(width, height))
+#     S3_channel_j=S3_to_plt[j,:,:]
+#     plt.imshow(S3_channel_j,cmap=cmaps_vec[j],interpolation='nearest')
+#     plt.axis('off')
+#     plt.tight_layout()
+#     plt.savefig(out_S3_dir + f"/S3_channel{j}.svg", format="svg", bbox_inches='tight', pad_inches=0)
+#     plt.close()
+#
+#     #colorbar
+#     fig, ax = plt.subplots()  # Adjust the aspect ratio
+#     norm = plt.Normalize(vmin=S3_channel_j.min(), vmax=S3_channel_j.max())
+#     cb = plt.colorbar(
+#         plt.cm.ScalarMappable(norm=norm, cmap=cmaps_vec[j]),  # Use the 'Reds' colormap
+#         cax=ax,
+#         orientation='vertical'
+#     )
+#     cb.set_label('Value', fontsize=12)  # Add a label if desired
+#     plt.savefig(out_S3_dir+f"/colorbar_S3_channel{j}.svg")
+#     plt.close()
 
-##plot S3, channel0
-# S3_channel0=S3_to_plt[0,:,:]
-# plt.figure(figsize=(width, height))
-# plt.imshow(S3_channel0, cmap=cmaps_vec[0], interpolation='nearest')  # Use the Reds colormap
-# plt.axis('off')  # Turn off the axes
-# plt.tight_layout()
-# plt.savefig(out_S3_dir+"/S3_channel0.svg",format="svg", bbox_inches='tight', pad_inches=0)
-# plt.close()
-for j in range(0,C_num_to_show):
-    plt.figure(figsize=(width, height))
-    S3_channel_j=S3_to_plt[j,:,:]
-    plt.imshow(S3_channel_j,cmap=cmaps_vec[j],interpolation='nearest')
-    plt.axis('off')
-    plt.tight_layout()
-    plt.savefig(out_S3_dir + f"/S3_channel{j}.svg", format="svg", bbox_inches='tight', pad_inches=0)
-    plt.close()
 
-    #colorbar
-    fig, ax = plt.subplots()  # Adjust the aspect ratio
-    norm = plt.Normalize(vmin=S3_channel_j.min(), vmax=S3_channel_j.max())
-    cb = plt.colorbar(
-        plt.cm.ScalarMappable(norm=norm, cmap=cmaps_vec[j]),  # Use the 'Reds' colormap
+###########################################################
+#plot final output
+final_output_cmap="gray"
+in_final_output_file=inCoefDir+"/final_output.pth"
+out_final_output_dir=inCoefDir+"/final_outputPics/"
+Path(out_final_output_dir).mkdir(parents=True, exist_ok=True)
+final_output=torch.load(in_final_output_file)
+plt_final_output=final_output[0,:,:].detach().cpu().numpy()
+print(f"plt_final_output.shape={plt_final_output.shape}")
+
+#plt final output
+plt.figure(figsize=(width, height))
+plt.imshow(plt_final_output,cmap=final_output_cmap, interpolation='nearest')
+# Remove x and y ticks
+plt.axis('off')  # Turn off the axes
+plt.tight_layout()
+plt.savefig(out_final_output_dir+"final_output.svg",format="svg", bbox_inches='tight', pad_inches=0)
+plt.close()
+
+#colorbar plt_final_output
+fig, ax = plt.subplots()  # Adjust the aspect ratio
+norm = plt.Normalize(vmin=plt_final_output.min(), vmax=plt_final_output.max())
+cb = plt.colorbar(
+        plt.cm.ScalarMappable(norm=norm, cmap=final_output_cmap),  # Use the 'Reds' colormap
         cax=ax,
         orientation='vertical'
     )
-    cb.set_label('Value', fontsize=12)  # Add a label if desired
-    plt.savefig(out_S3_dir+f"/colorbar_S3_channel{j}.svg")
-    plt.close()
+cb.set_label('Value', fontsize=12)  # Add a label if desired
+plt.savefig(out_final_output_dir+f"/colorbar_final_output.svg")
+plt.close()

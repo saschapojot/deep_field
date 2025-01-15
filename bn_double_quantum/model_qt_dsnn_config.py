@@ -311,6 +311,13 @@ class dsnn_qt(nn.Module):
 
 
         nonlinear_output = self.nonlinear_layer_T1_2_S1(T_output)
+        #######################
+        # #save
+        # out_g1File=outCoefDir+"/g1.pth"
+        # torch.save(nonlinear_output, out_g1File)
+        # print(f"g1 saved to {out_g1File}")
+        # end save
+        ########################
 
         # Step 3: Compute S1 as pointwise multiplication of F1 and nonlinear_output
         S1 = F1 * nonlinear_output
@@ -352,6 +359,14 @@ class dsnn_qt(nn.Module):
 
             nonlinear_output = self.g_mapping_layers[j](T_output)
 
+            #######################
+            # #save
+            # out_g_file=outCoefDir+f"g{ind}.pth"
+            # torch.save(nonlinear_output, out_g_file)
+            # print(f"g{ind} saved to {out_g_file}")
+            # end save
+            ########################
+
             # Step 3: Compute S_{n+1} as pointwise multiplication of Fn_plus_1 and nonlinear_output
             Sn = Fn_plus_1 * nonlinear_output
 
@@ -367,6 +382,13 @@ class dsnn_qt(nn.Module):
         final_output = self.final_mapping_layer(Sn)
         final_output = final_output.squeeze(1)  # Remove channel dimension (batch_size, 1, N, N) -> (batch_size, N, N)
         # Step 5: Compute the target scalar E by summing all elements in the N x N matrix
+        #######################
+        # #save
+        # out_final_outputFile = outCoefDir + f"/final_output.pth"
+        # torch.save(final_output, out_final_outputFile)
+        # print(f"final_output saved to {out_final_outputFile}")
+        # end save
+        ########################
         E = final_output.view(final_output.size(0), -1).sum(dim=1)  # Sum over all elements for each batch
         # print(f"E.shape={E.shape}")
         return E
