@@ -9,4 +9,4 @@ with batch normalization layers
 6. large_lattice_test_qt_dqnn.py to test on larger lattice
 7. fit_stats.py to fit data for larger size
 8. rescaled_err_large_lattice_test_qt_dqnn.py to get rescaled error
-9plt_coefs.py, to get visualization of layers
+9. plt_coefs.py, to get visualization of layers

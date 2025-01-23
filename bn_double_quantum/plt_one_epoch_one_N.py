@@ -95,7 +95,12 @@ xTickSize=33
 legend_fontsize=20
 lineWidth1=3
 marker_size1=100
+tick_length=13
+tick_width=2
+minor_tick_length=7
+minor_tick_width=1
 plt.figure(figsize=(width, height))
+plt.minorticks_on()
 plt.scatter(C_vec,relative_acc_layer0,color="blue",marker="o",s=marker_size1,label=f"EFNN, n={step_num_after_S1_vec[layer0]+1}")
 plt.plot(C_vec,relative_acc_layer0,color="blue",linestyle="dashed",linewidth=lineWidth1)
 
@@ -114,14 +119,17 @@ lin_err_relative=lin_mean_std/abs_Y_train_avg
 
 # print(f"lin_err_relative={lin_err_relative}")
 plt.axhline(y=lin_err_relative, color="black", linestyle="--", label=f"Effective model",linewidth=lineWidth1)
-plt.xlabel("Channel number",fontsize=textSize)
+plt.xlabel("$C$",fontsize=textSize)
 plt.ylabel("Relative error",fontsize=textSize)
 
 plt.yticks([0.009,0.01,0.02],labels=[r"0.009", "0.01", "0.02"],fontsize=yTickSize)
 plt.xticks([10,15,20,25],["10","15","20","25"],fontsize=xTickSize)
+plt.tick_params(axis='both', length=tick_length,width=tick_width)  # axis='both' adjusts both x and y ticks
+plt.tick_params(axis='y', which='minor', length=minor_tick_length, width=minor_tick_width, color='black')   # Minor ticks on y-axis
 
 plt.gca().yaxis.set_label_position("right")  # Move label to the right
-plt.legend(loc="upper right", bbox_to_anchor=(0.9, 0.8), fontsize=legend_fontsize)
+plt.legend(loc="upper right", bbox_to_anchor=(0.95, 0.8), fontsize=legend_fontsize)
 # plt.title(f"epoch={set_epoch}")
 plt.tight_layout()
 plt.savefig(out_pic_dir+f"epoch_{set_epoch}_N{N}.svg")
+plt.savefig(out_pic_dir+f"epoch_{set_epoch}_N{N}.png")

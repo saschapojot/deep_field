@@ -125,10 +125,14 @@ xTickSize=33
 legend_fontsize=24
 lineWidth1=3
 marker_size1=100
+tick_length=13
+tick_width=2
+minor_tick_length=7
+minor_tick_width=1
 out_db_qt_dir="../fig_qt/"
 Path(out_db_qt_dir).mkdir(parents=True, exist_ok=True)
 plt.figure(figsize=(width, height))
-
+plt.minorticks_on()
 # Plot the data
 #layer0
 plt.scatter(N_vec,relative_error_layer0,color="blue",marker="o",s=marker_size1,label=f"EFNN, n={layer0+1}")
@@ -147,10 +151,14 @@ plt.ylabel("Relative error",fontsize=textSize)
 plt.yscale("log")
 plt.xticks([10, 20, 30, 40], ["10", "20", "30", "40"], fontsize=xTickSize)
 plt.yticks([1,0.1, 0.01], labels=["1", "0.1", "0.01"], fontsize=yTickSize)
+plt.tick_params(axis='both', length=tick_length,width=2)  # axis='both' adjusts both x and y ticks
+plt.tick_params(axis='y', which='minor', length=minor_tick_length, width=minor_tick_width, color='black')
 # Adjust layout to fit y-label on the right and remove extra space
 plt.tight_layout(rect=[0, 0, 1, 1])  # Prevent truncation and ensure the full figure fits
 plt.legend(loc="upper right", bbox_to_anchor=(0.9, 0.8), fontsize=legend_fontsize)
 plt.gca().yaxis.set_label_position("right")  # Move y-axis label to the right
 # Save the figure
+plt.savefig(out_db_qt_dir + "/custom_error.png", bbox_inches="tight", dpi=300)  # bbox_inches ensures no truncation
+
 plt.savefig(out_db_qt_dir + "/custom_error.svg", bbox_inches="tight", dpi=300)  # bbox_inches ensures no truncation
 plt.close()

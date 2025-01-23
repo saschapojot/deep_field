@@ -42,14 +42,14 @@ def evaluate_model(model, test_loader, device):
 
 
 N=10
-C=30
+C=25
 #layer
 step_num_after_S1=2
 
 decrease_over = 50
 
 decrease_rate = 0.9
-num_epochs = 50
+# num_epochs = 50
 
 decrease_overStr=format_using_decimal(decrease_over)
 decrease_rateStr=format_using_decimal(decrease_rate)
