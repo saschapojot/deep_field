@@ -42,7 +42,7 @@ marker_size2=80
 lineWidth1=3
 lineWidth2=2
 tick_length=13
-tick_width=5
+tick_width=2
 minor_tick_length=7
 minor_tick_width=1
 #efnn vs dnn
@@ -63,8 +63,8 @@ plt.yscale("log")
 
 plt.scatter(layerNumVec,err_dnn_vec,color="red",marker="s",label="DNN",s=marker_size1)
 plt.plot(layerNumVec,err_dnn_vec,color="red",linestyle="dashed", linewidth=lineWidth1)
-custom_yticks = [0.01,0.03,0.07, 1]
-plt.yticks(custom_yticks, labels=["0.01", "0.03","0.07", "1"],fontsize=yTickSize)
+custom_yticks = [0.01,0.04,0.07, 1]
+plt.yticks(custom_yticks, labels=["0.01", "0.04","0.07", "1"],fontsize=yTickSize)
 plt.xticks([1,2,3],labels=["1","2","3"],fontsize=xTickSize)
 plt.tick_params(axis='both', length=tick_length,width=2)  # axis='both' adjusts both x and y ticks
 plt.tick_params(axis='y', which='minor', length=minor_tick_length, width=minor_tick_width, color='black')   # Minor ticks on y-axis
@@ -158,7 +158,7 @@ plt.legend(loc="best",fontsize=legend_fontsize)
 # plt.title("3 FP layers, more neurons",fontsize=28)
 plt.gca().yaxis.set_label_position("right")  # Move label to the right
 
-plt.tick_params(axis='both', length=tick_length,width=2)  # axis='both' adjusts both x and y ticks
+plt.tick_params(axis='both', length=tick_length,width=tick_width)  # axis='both' adjusts both x and y ticks
 plt.tight_layout()
 plt.savefig(outDir+"/more_neurons.svg")
 plt.savefig(outDir+"/more_neurons.png")

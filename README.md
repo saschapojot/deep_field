@@ -1,0 +1,4 @@
+useful folders:
+1. final_sum_inf_range_model_r_general
+2. final_sum_more_neurons_inf_range_general_r
+3. bn_double_quantum
