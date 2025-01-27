@@ -75,7 +75,7 @@ plt.xlabel("layer number")
 plt.legend(loc="best")
 plt.savefig(outPath+"/each_C.png")
 plt.close()
-
+print(f"total_params_arr: {total_params_arr}")
 
 ###for each layer, for all C
 def tot_param_num_vs_C(C,a,b,d):
