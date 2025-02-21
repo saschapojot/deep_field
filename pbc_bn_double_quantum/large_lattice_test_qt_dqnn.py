@@ -1,12 +1,14 @@
 import numpy as np
-
+import intel_extension_for_pytorch as ipex
+from datetime import datetime
 from model_qt_dsnn_config import *
-
+device = "xpu" if torch.xpu.is_available() else "cpu"  # Auto-detect Intel XPU
 #this function loads test data for larger lattices
 # def diff_2_ratio(E_pred,E_true):
 #     return (E_pred-E_true)**2/E_true**2
 #test with mse loss and custom loss
 # Evaluation Function
+print(f"device={device}")
 def evaluate_model(N,model, test_loader, device):
     """
     Evaluate the trained model on the test dataset.
@@ -69,7 +71,7 @@ decrease_over = 50
 decrease_rate = 0.9
 
 
-num_epochs =75#optimal is ?
+num_epochs =500#optimal is ?
 
 decrease_overStr=format_using_decimal(decrease_over)
 decrease_rateStr=format_using_decimal(decrease_rate)
@@ -114,12 +116,25 @@ stepsAfterInit=step_num_after_S1
 
 model.load_state_dict(checkpoint['model_state_dict'])  # Load saved weights
 model.to(device)  # Move model to device
+model_intel= ipex.optimize_for_inference(
+    model,
+    torch.float32
 
+)
+t_eval_start=datetime.now()
 # Evaluate the model
 test_loss,predictions = evaluate_model(N,model, test_loader, device)
 std_loss=np.sqrt(test_loss)
 # print(predictions)
 print(f"Test Loss (MSE): {test_loss:.6f}")
+t_eval_end=datetime.now()
+print(f"plain model: {t_eval_end-t_eval_start}")
+t_eval_intel_start=datetime.now()
+test_loss,predictions = evaluate_model(N,model_intel, test_loader, device)
+std_loss=np.sqrt(test_loss)
+print(f"Test Loss (MSE): {test_loss:.6f}")
+t_eval_intel_end=datetime.now()
+print(f"intel model: {t_eval_intel_end-t_eval_intel_start}")
 # print(f"custom_metric_sum={custom_metric_sum:.6f}")
 # custom_err=np.sqrt(custom_metric_sum/len(predictions))
 # print(f"custom_err={custom_err:.6f}")

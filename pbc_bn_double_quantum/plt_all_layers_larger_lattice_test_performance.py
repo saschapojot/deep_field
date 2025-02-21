@@ -13,11 +13,11 @@ mpl.rcParams['axes.linewidth'] = 2.5  # Set for all plots
 #for all layers
 
 layer_vec=np.array([0,1,2])
-C=10
+C=20
 rate=0.9
 N_vec=np.array([10,15,20,25,30,35,40])
 num_suffix=40000
-num_epochs = 175#optimal is ?
+num_epochs = 500#optimal is ?
 
 inDirRoot="./larger_lattice_test_performance/"
 def N_2_test_file(N,layer_num):
@@ -133,6 +133,7 @@ minor_tick_width=1
 out_db_qt_dir="./larger_lattice_test_performance/"
 Path(out_db_qt_dir).mkdir(parents=True, exist_ok=True)
 plt.figure(figsize=(width, height))
+# plt.figure()
 plt.minorticks_on()
 # Plot the data
 #layer0
@@ -146,20 +147,27 @@ plt.plot(N_vec,relative_error_layer1,color="magenta",linestyle="dashed",linewidt
 #layer 2
 plt.scatter(N_vec,relative_error_layer2,color="green",marker="s",s=marker_size1,label=f"EFNN, n={layer2+1}")
 plt.plot(N_vec,relative_error_layer2,color="green",linestyle="dashed",linewidth=lineWidth1)
-plt.title(f"C={C}, epoch={num_epochs}")
+# plt.title(f"C={C}, epoch={num_epochs}")
 plt.xlabel("$N$", fontsize=textSize)
 plt.ylabel("Relative error",fontsize=textSize)
-plt.yscale("log")
+# plt.yscale("log")
 plt.xticks([10, 20, 30, 40], ["10", "20", "30", "40"], fontsize=xTickSize)
-plt.yticks( fontsize=yTickSize)
+plt.yticks([3e-3,2e-3,1e-3],["3","2","1"], fontsize=yTickSize)
+
+ax = plt.gca()
+formatter = plt.ScalarFormatter(useOffset=False, useMathText=True)
+formatter.set_powerlimits((-3, -2))  # Adjust power limits if needed
+ax.yaxis.set_major_formatter(formatter)
+# plt.yticks([3e-3,2e-3,1e-3],["3","2","1"], fontsize=yTickSize)
 plt.tick_params(axis='both', length=tick_length,width=2)  # axis='both' adjusts both x and y ticks
 plt.tick_params(axis='y', which='minor', length=minor_tick_length, width=minor_tick_width, color='black')
+plt.gca().yaxis.get_offset_text().set_fontsize(yTickSize)  # Set the size of the exponent
 # Adjust layout to fit y-label on the right and remove extra space
 plt.tight_layout(rect=[0, 0, 1, 1])  # Prevent truncation and ensure the full figure fits
 plt.legend(loc="upper right", bbox_to_anchor=(0.9, 0.8), fontsize=legend_fontsize)
 # plt.gca().yaxis.set_label_position("right")  # Move y-axis label to the right
 # Save the figure
-plt.savefig(out_db_qt_dir + f"/relative_error_C{C}_epoch{num_epochs}.png", bbox_inches="tight", dpi=300)  # bbox_inches ensures no truncation
+plt.savefig(out_db_qt_dir + f"/relative_error_C{C}_epoch{num_epochs}_pbc.png", bbox_inches="tight")  # bbox_inches ensures no truncation
 
-plt.savefig(out_db_qt_dir + f"/relative_error_C{C}_epoch{num_epochs}.svg", bbox_inches="tight", dpi=300)  # bbox_inches ensures no truncation
+plt.savefig(out_db_qt_dir + f"/relative_error_C{C}_epoch{num_epochs}_pbc.svg", bbox_inches="tight")  # bbox_inches ensures no truncation
 plt.close()

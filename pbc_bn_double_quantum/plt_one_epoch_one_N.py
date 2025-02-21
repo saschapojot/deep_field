@@ -15,7 +15,7 @@ mpl.rcParams['axes.linewidth'] = 2.5  # Set for all plots
 decrease_over = 50
 decrease_rate = 0.9
 step_num_after_S1_vec=[0,1,2]
-C_vec=[10,15,20,25,30]
+C_vec=[10,15,20,25]
 
 
 decrease_overStr=format_using_decimal(decrease_over)
@@ -69,8 +69,7 @@ Y_train_avg=np.mean(Y_train_array)
 abs_Y_train_avg=np.abs(Y_train_avg)
 
 print(f"Y_train_array.shape={Y_train_array.shape}")
-set_epoch=200
-
+set_epoch=500
 layer0=step_num_after_S1_vec[0]
 std_for_layer0=std_loss_all_one_epoch(set_epoch,layer0,N,C_vec)
 
@@ -84,6 +83,8 @@ std_for_layer2=std_loss_all_one_epoch(set_epoch,layer2,N,C_vec)
 relative_acc_layer0=std_for_layer0/abs_Y_train_avg
 relative_acc_layer1=std_for_layer1/abs_Y_train_avg
 relative_acc_layer2=std_for_layer2/abs_Y_train_avg
+print(f"set_epoch={set_epoch}, relative_acc_layer0={relative_acc_layer0}")
+print(f"set_epoch={set_epoch}, relative_acc_layer1={relative_acc_layer1}")
 print(f"set_epoch={set_epoch}, relative_acc_layer2={relative_acc_layer2}")
 # out_pic_dir="../fig_qt/"
 out_pic_dir="./out_model_data/"
@@ -101,6 +102,7 @@ tick_width=2
 minor_tick_length=7
 minor_tick_width=1
 plt.figure(figsize=(width, height))
+# plt.figure()
 plt.minorticks_on()
 plt.scatter(C_vec,relative_acc_layer0,color="blue",marker="o",s=marker_size1,label=f"EFNN, n={step_num_after_S1_vec[layer0]+1}")
 plt.plot(C_vec,relative_acc_layer0,color="blue",linestyle="dashed",linewidth=lineWidth1)
@@ -119,11 +121,12 @@ lin_mean_std=np.sqrt(lin_mean_mse)
 lin_err_relative=lin_mean_std/abs_Y_train_avg
 
 # print(f"lin_err_relative={lin_err_relative}")
+
 plt.axhline(y=lin_err_relative, color="black", linestyle="--", label=f"Effective model",linewidth=lineWidth1)
 plt.xlabel("$C$",fontsize=textSize)
 plt.ylabel("Relative error",fontsize=textSize)
 
-plt.yticks([0.01,0.02],labels=[ "0.01","0.02"],fontsize=yTickSize)
+plt.yticks([0,0.5/1e2,1/1e2,1.5/1e2,2/1e2],labels=[ "0","0.5","1","1.5","2"],fontsize=yTickSize)
 plt.xticks([10,15,20,25],["10","15","20","25"],fontsize=xTickSize)
 plt.tick_params(axis='both', length=tick_length,width=tick_width)  # axis='both' adjusts both x and y ticks
 plt.tick_params(axis='y', which='minor', length=minor_tick_length, width=minor_tick_width, color='black')   # Minor ticks on y-axis
@@ -131,6 +134,12 @@ plt.tick_params(axis='y', which='minor', length=minor_tick_length, width=minor_t
 # plt.gca().yaxis.set_label_position("right")  # Move label to the right
 plt.legend(loc="upper right", bbox_to_anchor=(0.95, 0.8), fontsize=legend_fontsize)
 # plt.title(f"epoch={set_epoch}")
+ax = plt.gca()
+formatter = plt.ScalarFormatter(useOffset=False, useMathText=True)
+formatter.set_powerlimits((-2, -1))  # Adjust power limits if needed
+ax.yaxis.set_major_formatter(formatter)
+plt.gca().yaxis.get_offset_text().set_fontsize(yTickSize)  # Set the size of the exponent
+
 plt.tight_layout()
-plt.savefig(out_pic_dir+f"epoch_{set_epoch}_N{N}.svg")
-plt.savefig(out_pic_dir+f"epoch_{set_epoch}_N{N}.png")
+plt.savefig(out_pic_dir+f"epoch_{set_epoch}_N{N}_pbc.svg",bbox_inches='tight')
+plt.savefig(out_pic_dir+f"epoch_{set_epoch}_N{N}_pbc.png",bbox_inches='tight')
