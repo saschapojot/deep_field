@@ -42,7 +42,7 @@ A=2
 # System Parameters
 
 L = 15# Number of spins
-r = 3 # Number of spins in each interaction term
+r = 5 # Number of spins in each interaction term
 
 seed=17
 np.random.seed(seed)
