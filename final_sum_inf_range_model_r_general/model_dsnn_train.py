@@ -8,7 +8,7 @@ from datetime import datetime
 from torch.optim.lr_scheduler import StepLR
 from torch.utils.data import Dataset, DataLoader
 from pathlib import Path
-from model_dsnn_config import format_using_decimal,DSNN,CustomDataset,L,r,decrease_over
+from model_dsnn_config import format_using_decimal,DSNN,CustomDataset,L,r
 from model_dsnn_config import  num_neurons,decrease_rate,batch_size,learning_rate,weight_decay
 from model_dsnn_config import  epoch_multiple,device
 
@@ -51,7 +51,9 @@ optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=
 
 # Define a step learning rate scheduler
 # Reduce learning rate by a factor of gamma every step_size epochs
-
+factor=1e-2
+decrease_over=int(num_epochs*np.log(decrease_rate)/np.log(factor))
+print(f"decrease_over={decrease_over}")
 scheduler = StepLR(optimizer, step_size=decrease_over, gamma=decrease_rate)
 decrease_overStr=format_using_decimal(decrease_over)
 decrease_rateStr=format_using_decimal(decrease_rate)

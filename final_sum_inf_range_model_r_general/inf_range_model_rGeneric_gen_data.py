@@ -49,6 +49,7 @@ np.random.seed(seed)
 N_samples=int(20000)
 
 B = list(combinations(range(L), r))
+print(f"r={r}")
 print(f"len(B)={len(B)}")
 # print(B[0])
 # print(B[134])
