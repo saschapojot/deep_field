@@ -1,7 +1,7 @@
 import re
 import matplotlib.pyplot as plt
 import numpy as np
-from sympy.codegen.ast import continue_
+
 
 from model_qt_dsnn_config import *
 import matplotlib as mpl
@@ -106,7 +106,7 @@ plt.plot(C_vec,relative_acc_layer0,color="blue",linestyle="dashed",linewidth=lin
 
 plt.scatter(C_vec,relative_acc_layer1,color="magenta",marker="^",s=marker_size1,label=f"EFNN, n={step_num_after_S1_vec[layer1]+1}")
 plt.plot(C_vec,relative_acc_layer1,color="magenta",linestyle="dashed",linewidth=lineWidth1)
-plt.yscale("log")
+# plt.yscale("log")
 plt.xticks(C_vec)
 
 plt.scatter(C_vec,relative_acc_layer2,color="green",marker="s",s=marker_size1,label=f"EFNN, n={step_num_after_S1_vec[layer2]+1}")
@@ -122,12 +122,12 @@ plt.axhline(y=lin_err_relative, color="black", linestyle="--", label=f"Effective
 plt.xlabel("$C$",fontsize=textSize)
 plt.ylabel("Relative error",fontsize=textSize)
 
-plt.yticks([0.009,0.01,0.02],labels=[r"0.009", "0.01", "0.02"],fontsize=yTickSize)
+plt.yticks([0.01,0.02],labels=[ "0.01","0.02"],fontsize=yTickSize)
 plt.xticks([10,15,20,25],["10","15","20","25"],fontsize=xTickSize)
 plt.tick_params(axis='both', length=tick_length,width=tick_width)  # axis='both' adjusts both x and y ticks
 plt.tick_params(axis='y', which='minor', length=minor_tick_length, width=minor_tick_width, color='black')   # Minor ticks on y-axis
 
-plt.gca().yaxis.set_label_position("right")  # Move label to the right
+# plt.gca().yaxis.set_label_position("right")  # Move label to the right
 plt.legend(loc="upper right", bbox_to_anchor=(0.95, 0.8), fontsize=legend_fontsize)
 # plt.title(f"epoch={set_epoch}")
 plt.tight_layout()

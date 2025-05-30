@@ -10,7 +10,7 @@ from torch.utils.data import Dataset, DataLoader
 from pathlib import Path
 import sys
 
-#using dropout
+
 t=1
 
 J=16*t
@@ -423,3 +423,19 @@ class CustomDataset(Dataset):
             tuple: (input, target) where input is of shape (3, N, N) and target is a scalar.
         """
         return self.X[idx], self.Y[idx]
+
+
+def count_parameters(model):
+    """
+    Counts the number of trainable and non-trainable parameters in the model.
+
+    Args:
+        model (torch.nn.Module): The model.
+
+    Returns:
+        int: Total number of parameters.
+        int: Total number of trainable parameters.
+    """
+    total_params = sum(p.numel() for p in model.parameters())
+    trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    return total_params, trainable_params
