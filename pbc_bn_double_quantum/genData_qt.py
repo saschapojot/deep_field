@@ -3,7 +3,7 @@ import sys
 from model_qt_dsnn_config import *
 
 #This script generates data for double exchange quantum model
-
+#model is pbc
 
 def generate_uniform_matrix(N, low=0, high=2*np.pi, seed=None):
     """
